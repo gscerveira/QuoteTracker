@@ -5,7 +5,7 @@ from .serializers import ProjectSerializer, ItemSerializer, QuoteRequestSerializ
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.select_related('items__quoterequests')
+    queryset = Project.objects.prefetch_related('items', 'items__quoterequests')
     serializer_class = ProjectSerializer
 
 
