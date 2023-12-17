@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from .models import Project, Item, QuoteRequest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
@@ -34,7 +33,23 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class NestedQuoteRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuoteRequest
+        fields = ['id', 'status', 'details']
+
+
+class NestedItemSerializer(serializers.ModelSerializer):
+    quoterequests = NestedQuoteRequestSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Item
+        fields = ['id', 'name', 'description', 'quoterequests']
+
+
 class ProjectSerializer(serializers.ModelSerializer):
+    items = NestedItemSerializer(many=True, read_only=True)
+
     class Meta:
         model = Project
         fields = ['id', 'user', 'name', 'description']
