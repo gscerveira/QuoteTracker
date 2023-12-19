@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
 from django.contrib.auth import authenticate, login, logout
 from .models import Project, Item, QuoteRequest
-from .serializers import ProjectSerializer, ItemSerializer, QuoteRequestSerializer, UserSerializer
+from .serializers import ProjectSerializer, ItemSerializer, QuoteRequestSerializer, UserSerializer, LoginSerializer
 # Create your views here.
 
 
@@ -13,7 +13,10 @@ class UserRegistrationView(CreateAPIView):
 
 class UserLoginView(views.APIView):
     def post(self, request):
-        user = authenticate(request, **request.data)
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = authenticate(**serializer.validated_data)
         if user:
             login(request, user)
             return Response({'detail': 'Login successful.'}, status=status.HTTP_200_OK)
