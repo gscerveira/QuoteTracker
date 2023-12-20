@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status, views
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
 from .models import Project, Item, QuoteRequest
 from .serializers import ProjectSerializer, ItemSerializer, QuoteRequestSerializer, UserSerializer, LoginSerializer
@@ -30,15 +31,27 @@ class UserLogoutView(views.APIView):
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.prefetch_related('items', 'items__quoterequests')
+    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Project.objects.filter(user=self.request.user)
 
 
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Project.objects.filter(user=self.request.user)
 
 
 class QuoteRequestViewset(viewsets.ModelViewSet):
     queryset = QuoteRequest.objects.all()
     serializer_class = QuoteRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Project.objects.filter(user=self.request.user)
