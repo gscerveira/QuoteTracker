@@ -39,26 +39,10 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
 
-class NestedQuoteRequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = QuoteRequest
-        fields = ['id', 'status', 'details']
-
-
-class NestedItemSerializer(serializers.ModelSerializer):
-    quoterequests = NestedQuoteRequestSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Item
-        fields = ['id', 'name', 'description', 'quoterequests']
-
-
 class ProjectSerializer(serializers.ModelSerializer):
-    items = NestedItemSerializer(many=True, read_only=True)
-
     class Meta:
         model = Project
-        fields = ['id', 'user', 'name', 'description', 'items']
+        fields = ['id', 'user', 'name', 'description']
 
 
 class ItemSerializer(serializers.ModelSerializer):
