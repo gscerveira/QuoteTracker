@@ -2,6 +2,7 @@ from rest_framework import viewsets, status, views
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login, logout
 from .models import Project, Item, QuoteRequest
 from .serializers import ProjectSerializer, ItemSerializer, QuoteRequestSerializer, UserSerializer, LoginSerializer
@@ -38,6 +39,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Project.objects.filter(user=self.request.user)
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
@@ -47,6 +51,12 @@ class ItemViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Project.objects.filter(user=self.request.user)
 
+    def perform_create(self, serializer):
+        project = serializer.validated_data.get('project')
+        if project not in self.request.user.projects.all():
+            raise PermissionDenied("Project doesn't exist")
+        serializer.save()
+
 
 class QuoteRequestViewset(viewsets.ModelViewSet):
     queryset = QuoteRequest.objects.all()
@@ -55,3 +65,9 @@ class QuoteRequestViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Project.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        item = serializer.validated_data.get('item')
+        if item.project not in self.request.user.projects.all():
+            raise PermissionDenied("Project doesn't exist")
+        serializer.save()
