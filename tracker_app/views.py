@@ -4,8 +4,9 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login, logout
-from .models import Project, Item, QuoteRequest
-from .serializers import ProjectSerializer, ItemSerializer, QuoteRequestSerializer, UserSerializer, LoginSerializer
+from .models import Project, Item, QuoteRequest, Store
+from .serializers import (ProjectSerializer, ItemSerializer, QuoteRequestSerializer, UserSerializer, LoginSerializer,
+                          StoreSerializer)
 # Create your views here.
 
 
@@ -56,6 +57,14 @@ class ItemViewSet(viewsets.ModelViewSet):
         if project not in self.request.user.projects.all():
             raise PermissionDenied("Project doesn't exist")
         serializer.save()
+
+
+class StoreViewset(viewsets.ModelViewSet):
+    queryset = Store.objects.all()
+    serializer_class = StoreSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class QuoteRequestViewset(viewsets.ModelViewSet):

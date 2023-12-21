@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
-from .models import Project, Item, QuoteRequest
+from .models import Project, Item, QuoteRequest, Store
 
 
 User = get_user_model()
@@ -54,4 +54,13 @@ class ItemSerializer(serializers.ModelSerializer):
 class QuoteRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuoteRequest
-        fields = ['id', 'item', 'status', 'details']
+        fields = ['id', 'item', 'status', 'details', 'store']
+
+
+class StoreSerializer:
+    class Meta:
+        model = Store
+        fields = ['id', 'name', 'user']
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }

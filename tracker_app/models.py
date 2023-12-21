@@ -29,6 +29,18 @@ class Item(models.Model):
         return self.name
 
 
+class Store(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    user = models.ForeignKey(User, related_name='stores', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        unique_together = ('user', 'name')
+
+    def __str__(self):
+        return f"{self.name} (User: {self.user.username})"
+
+
 class QuoteRequest(models.Model):
     NEED_SEND = 'need_to_send'
     SENT = 'sent'
@@ -46,6 +58,7 @@ class QuoteRequest(models.Model):
     item = models.ForeignKey(Item, related_name='quoterequests', on_delete=models.CASCADE)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES)
     details = models.TextField(blank=True)
+    store = models.ForeignKey(Store,on_delete=models.SET_NULL, null=True, blank=True, related_name='quoterequests')
 
     def __str__(self):
         return f"Quote request for {self.item.name}"
