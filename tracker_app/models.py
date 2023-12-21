@@ -58,7 +58,7 @@ class QuoteRequest(models.Model):
     item = models.ForeignKey(Item, related_name='quoterequests', on_delete=models.CASCADE)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES)
     details = models.TextField(blank=True)
-    store = models.ForeignKey(Store,on_delete=models.SET_NULL, related_name='quoterequests')
+    store = models.ForeignKey(Store,on_delete=models.CASCADE, related_name='quoterequests')
 
     def __str__(self):
         return f"Quote request for {self.item.name}"
