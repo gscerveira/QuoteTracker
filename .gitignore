@@ -160,3 +160,4 @@ cython_debug/
 .idea/
 /tracker_app/migrations/0001_initial.py
 /tracker_app/migrations/0002_alter_item_project_alter_quoterequest_item.py
+/tracker_app/migrations/0002_store_quoterequest_store.py
