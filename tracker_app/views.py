@@ -68,6 +68,7 @@ class QuoteRequestViewset(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         item = serializer.validated_data.get('item')
-        if item.project not in self.request.user.projects.all():
-            raise PermissionDenied("Project doesn't exist")
+        user_projects_items = Item.objects.filter(project__user=self.request.user)
+        if item not in user_projects_items:
+            raise PermissionDenied("Item doesn't exist")
         serializer.save()
