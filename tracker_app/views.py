@@ -10,6 +10,11 @@ from .serializers import (ProjectSerializer, ItemSerializer, QuoteRequestSeriali
 # Create your views here.
 
 
+class BaseCustomViewSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+
 class UserRegistrationView(CreateAPIView):
     serializer_class = UserSerializer
 
@@ -32,25 +37,19 @@ class UserLogoutView(views.APIView):
         return Response({'detail': 'Logout successful'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class ProjectViewSet(viewsets.ModelViewSet):
+class ProjectViewSet(BaseCustomViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-class ItemViewSet(viewsets.ModelViewSet):
+class ItemViewSet(BaseCustomViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         project = serializer.validated_data.get('project')
@@ -67,13 +66,10 @@ class StoreViewset(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class QuoteRequestViewset(viewsets.ModelViewSet):
+class QuoteRequestViewset(BaseCustomViewSet):
     queryset = QuoteRequest.objects.all()
     serializer_class = QuoteRequestSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         item = serializer.validated_data.get('item')

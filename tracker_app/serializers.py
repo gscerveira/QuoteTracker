@@ -10,10 +10,12 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())]
+        validators=[UniqueValidator(queryset=User.objects.all())],
+        max_length=255
     )
     username = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())]
+        validators=[UniqueValidator(queryset=User.objects.all())],
+        max_length=255
     )
 
     class Meta:
@@ -57,7 +59,7 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
         fields = ['id', 'item', 'status', 'details', 'store']
 
 
-class StoreSerializer:
+class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
         fields = ['id', 'name', 'user']
