@@ -51,6 +51,9 @@ class ItemViewSet(BaseCustomViewSet):
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return Item.objects.filter(project__user=self.request.user)
+
     def perform_create(self, serializer):
         project = serializer.validated_data.get('project')
         if project not in self.request.user.projects.all():
@@ -70,6 +73,9 @@ class QuoteRequestViewset(BaseCustomViewSet):
     queryset = QuoteRequest.objects.all()
     serializer_class = QuoteRequestSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return QuoteRequest.objects.filter(item__project__user=self.request.user)
 
     def perform_create(self, serializer):
         item = serializer.validated_data.get('item')
