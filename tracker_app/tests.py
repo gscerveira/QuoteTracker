@@ -50,7 +50,7 @@ def test_login_user(api_client):
 @pytest.mark.django_db
 def test_logout_user(api_client):
     user = User.objects.create_user(username='testuser', email='testuser@test.com', password='pass5595')
-    api_client.force_authenticate(user=user)
+    api_client.login(username='testuser', password='pass5595')
 
     # Logout
     url = reverse('logout')
@@ -60,4 +60,4 @@ def test_logout_user(api_client):
     # Try to access protected url
     url_projects = reverse('projects-list')
     response = api_client.get(url_projects)
-    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response.status_code == status.HTTP_403_FORBIDDEN
