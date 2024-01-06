@@ -5,10 +5,10 @@ from .views import (ProjectViewSet, ItemViewSet, QuoteRequestViewset, UserRegist
 
 
 router = DefaultRouter()
-router.register(r'projects', ProjectViewSet)
-router.register(r'items', ItemViewSet)
-router.register(r'quoterequests', QuoteRequestViewset)
-router.register(r'stores', StoreViewset)
+router.register(r'projects', ProjectViewSet, basename='projects')
+router.register(r'items', ItemViewSet, basename='items')
+router.register(r'quoterequests', QuoteRequestViewset, basename='quoterequests')
+router.register(r'stores', StoreViewset, basename='stores')
 
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='register'),
