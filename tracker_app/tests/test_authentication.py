@@ -25,6 +25,7 @@ def test_register_user(api_client):
     assert response.status_code == status.HTTP_201_CREATED
     assert User.objects.get().username == 'testuser'
 
+
 @pytest.mark.django_db
 def test_login_user(api_client):
     User.objects.create_user(username='testuser', email='testuser@test.com', password='pass5595')

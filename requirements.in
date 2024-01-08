@@ -1,0 +1,17 @@
+asgiref
+Django
+django-environ
+django-filter
+djangorestframework
+exceptiongroup
+iniconfig
+Markdown
+packaging
+pluggy
+psycopg2-binary
+pytest
+pytest-django
+pytz
+sqlparse
+tomli
+typing_extensions
