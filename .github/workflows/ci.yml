@@ -12,17 +12,17 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Build the Docker image
-      run: docker-compose build
-
-    - name: Start the Docker containers
-      run: docker-compose up -d
-
-    - name: Run tests in the Docker environment
       env:
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
+      run: docker-compose build
+
+    - name: Start the Docker containers
+      run: docker-compose up -d
+
+    - name: Run tests in the Docker environment
       run: docker-compose exec web pytest
 
