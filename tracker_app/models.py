@@ -56,7 +56,7 @@ class QuoteRequest(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     item = models.ForeignKey(Item, related_name='quoterequests', on_delete=models.CASCADE)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=NEED_SEND)
     details = models.TextField(blank=True)
     store = models.ForeignKey(Store,on_delete=models.CASCADE, related_name='quoterequests')
 
