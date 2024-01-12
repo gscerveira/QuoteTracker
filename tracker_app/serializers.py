@@ -45,6 +45,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'user', 'name', 'description']
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
 
 
 class ItemSerializer(serializers.ModelSerializer):
