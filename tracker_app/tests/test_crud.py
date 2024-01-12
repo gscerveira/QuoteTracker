@@ -13,23 +13,21 @@ def api_client():
     return APIClient()
 
 @pytest.fixture
-def create_project():
-    return Project.objects.create(name='Test Project', description='Project Description')
-
-@pytest.fixture
-def create_item():
-    return Item.objects.create(name='Test Item')
-    
-
-@pytest.fixture
 def test_user():
     return User.objects.create_user(username='testuser', email='test@user.com', password='test5595')
-    
+
+@pytest.fixture
+def test_project():
+    return Project.objects.create(user=test_user, name='Test Project', description='Project Description')
+
+@pytest.fixture
+def test_item():
+    return Item.objects.create(project=test_project, name='Test Item', description='Item Description')
+        
 
 @pytest.mark.django_db
 def test_project_list(api_client, test_user, create_project):
     force_authenticate(api_client, user=test_user)
-    create_project('Test Project', 'Project Description')
     url = reverse('projects-list')
     response = api_client.get(url)
     assert response.status_code == status.HTTP_200_OK
@@ -41,19 +39,17 @@ def test_project_create(api_client, test_user):
     force_authenticate(api_client, user=test_user)
     url = reverse('project-list')
     data = {
-        'name': 'Test Project',
+        'name': 'New Project',
         'description': 'Project Description'
     }
     response = api_client.post(url, data)
     assert response.status_code == status.HTTP_201_CREATED
-    assert Project.objects.count() == 1
-    assert Project.objects.last().name == 'Test Project'
+    assert Project.objects.count() == 2
+    assert Project.objects.last().name == 'New Project'
 
 @pytest.mark.django_db
-def test_item_list(api_client, create_user, create_project, create_item):
+def test_item_list(api_client):
     force_authenticate(api_client, user=test_user)
-    project = create_project('Test Project', 'Project Description')
-    item = create_item(project, 'Test Item')
     url = reverse('item-list')
     response = api_client.get(url)
     assert response.status_code == status.HTTP_200_OK
@@ -61,14 +57,13 @@ def test_item_list(api_client, create_user, create_project, create_item):
     assert response.data[0]['name'] == 'Test Item'
 
 @pytest.mark.django_db
-def test_item_create(api_client, create_user, create_project):
-    user = create_user('testuser', 'testpassword')
-    api_client.login(username='testuser', password='testpassword')
-    project = create_project(user, 'Test Project')
+def test_item_create(api_client, test_user, test_project):
+    force_authenticate(api_client, user=test_user)
     url = reverse('item-list')
     data = {
-        'project': project.id,
-        'name': 'New Item'
+        'project': test_project.id,
+        'name': 'New Item',
+        'description': 'Item Description'
     }
     response = api_client.post(url, data)
     assert response.status_code == status.HTTP_201_CREATED
