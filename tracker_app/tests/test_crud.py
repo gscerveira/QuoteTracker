@@ -2,9 +2,9 @@ import pytest
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.test import APIClient
-from .models import Project, Item
-from .serializers import ProjectSerializer, ItemSerializer
+from rest_framework.test import APIClient, force_authenticate
+from tracker_app.models import Project, Item
+from tracker_app.serializers import ProjectSerializer, ItemSerializer
 
 User = get_user_model()
 
@@ -14,26 +14,22 @@ def api_client():
 
 @pytest.fixture
 def create_project():
-    def _create_project(name, description):
-        return Project.objects.create(name=name, description=description)
-    return _create_project
+    return Project.objects.create(name='Test Project', description='Project Description')
 
 @pytest.fixture
 def create_item():
-    def _create_item(project, name):
-        return Item.objects.create(project=project, name=name)
-    return _create_item
+    return Item.objects.create(name='Test Item')
+    
 
 @pytest.fixture
-def create_user():
-    def _create_user(username, email, password):
-        return User.objects.create_user(username=username, email=email, password=password)
-    return _create_user
+def test_user():
+    return User.objects.create_user(username='testuser', email='test@user.com', password='test5595')
+    
 
 @pytest.mark.django_db
-def test_project_list(api_client, create_user, create_project):
-    user = create_user('testuser', 'test@user.com', 'testpassword')
-    project = create_project('Test Project', 'Project Description')
+def test_project_list(api_client, test_user, create_project):
+    force_authenticate(api_client, user=test_user)
+    create_project('Test Project', 'Project Description')
     url = reverse('projects-list')
     response = api_client.get(url)
     assert response.status_code == status.HTTP_200_OK
@@ -41,22 +37,22 @@ def test_project_list(api_client, create_user, create_project):
     assert response.data[0]['name'] == 'Test Project'
 
 @pytest.mark.django_db
-def test_project_create(api_client, create_user):
-    user = create_user('testuser', 'testpassword')
-    api_client.login(username='testuser', password='testpassword')
+def test_project_create(api_client, test_user):
+    force_authenticate(api_client, user=test_user)
     url = reverse('project-list')
     data = {
-        'name': 'New Project'
+        'name': 'Test Project',
+        'description': 'Project Description'
     }
     response = api_client.post(url, data)
     assert response.status_code == status.HTTP_201_CREATED
-    assert Project.objects.count() == 2
-    assert Project.objects.last().name == 'New Project'
+    assert Project.objects.count() == 1
+    assert Project.objects.last().name == 'Test Project'
 
 @pytest.mark.django_db
 def test_item_list(api_client, create_user, create_project, create_item):
-    user = create_user('testuser', 'testpassword')
-    project = create_project(user, 'Test Project')
+    force_authenticate(api_client, user=test_user)
+    project = create_project('Test Project', 'Project Description')
     item = create_item(project, 'Test Item')
     url = reverse('item-list')
     response = api_client.get(url)
