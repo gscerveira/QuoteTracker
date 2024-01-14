@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,6 +18,7 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: docker-compose build
 
     - name: Start the Docker containers
@@ -27,7 +28,8 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
-      run: docker-compose up -d
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      run: docker-compose up -d && sleep 20s && docker-compose ps && docker-compose logs web
 
     - name: Run tests in the Docker environment
       env:
@@ -36,5 +38,6 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
-      run: docker-compose exec -t web pytest
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      run: docker-compose exec -T web pytest
 
