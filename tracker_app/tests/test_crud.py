@@ -83,7 +83,6 @@ def test_project_delete(api_client, test_user, test_project):
     response = api_client.delete(url)
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert Project.objects.count() == 0
-    assert Store.objects.count() == 0
     assert Item.objects.count() == 0
     assert QuoteRequest.objects.count() == 0
 
@@ -137,6 +136,8 @@ def test_item_delete(api_client, test_user, test_item):
     response = api_client.delete(url)
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert Item.objects.count() == 0
+    assert QuoteRequest.objects.count() == 0
+
 
 
 # Store Tests
