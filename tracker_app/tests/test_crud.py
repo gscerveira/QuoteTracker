@@ -16,6 +16,9 @@ def api_client():
 def test_user():
     return User.objects.create_user(username='testuser', email='test@user.com', password='test5595')
 
+def test_user2():
+    return User.objects.create_user(username='testuser2', email='test@user2.com', password='test5595')
+
 @pytest.fixture
 def test_project(test_user):
     return Project.objects.create(user=test_user, name='Test Project', description='Project Description')
@@ -75,6 +78,21 @@ def test_project_update(api_client, test_user, test_project):
     assert Project.objects.last().name == 'Updated Project'
     assert Project.objects.last().description == 'Updated Project Description'
 
+# Unauthorized Update
+@pytest.mark.django_db
+def test_project_unauthorized_update(api_client, test_user2, test_project):
+    api_client.force_authenticate(user=test_user2)
+    url = reverse('projects-detail', args=[test_project.id])
+    data = {
+        'name': 'Updated Project',
+        'description': 'Updated Project Description'
+    }
+    response = api_client.patch(url, data)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert Project.objects.count() == 1
+    assert Project.objects.last().name == 'Test Project'
+    assert Project.objects.last().description == 'Project Description'
+
 # Delete
 @pytest.mark.django_db
 def test_project_delete(api_client, test_user, test_project):
@@ -85,6 +103,17 @@ def test_project_delete(api_client, test_user, test_project):
     assert Project.objects.count() == 0
     assert Item.objects.count() == 0
     assert QuoteRequest.objects.count() == 0
+
+# Unauthorized Delete
+@pytest.mark.django_db
+def test_project_unauthorized_delete(api_client, test_user2, test_project):
+    api_client.force_authenticate(user=test_user2)
+    url = reverse('projects-detail', args=[test_project.id])
+    response = api_client.delete(url)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert Project.objects.count() == 1
+    assert Item.objects.count() == 1
+    assert QuoteRequest.objects.count() == 1
 
 # Item Tests
     
@@ -128,6 +157,21 @@ def test_item_update(api_client, test_user, test_item):
     assert Item.objects.last().name == 'Updated Item'
     assert Item.objects.last().description == 'Updated Item Description'
 
+# Unauthorized Update
+@pytest.mark.django_db
+def test_item_unauthorized_update(api_client, test_user2, test_item):
+    api_client.force_authenticate(user=test_user2)
+    url = reverse('items-detail', args=[test_item.id])
+    data = {
+        'name': 'Updated Item',
+        'description': 'Updated Item Description'
+    }
+    response = api_client.patch(url, data)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert Item.objects.count() == 1
+    assert Item.objects.last().name == 'Test Item'
+    assert Item.objects.last().description == 'Item Description'
+
 # Delete
 @pytest.mark.django_db
 def test_item_delete(api_client, test_user, test_item):
@@ -137,6 +181,16 @@ def test_item_delete(api_client, test_user, test_item):
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert Item.objects.count() == 0
     assert QuoteRequest.objects.count() == 0
+
+# Unauthorized Delete
+@pytest.mark.django_db
+def test_item_unauthorized_delete(api_client, test_user2, test_item):
+    api_client.force_authenticate(user=test_user2)
+    url = reverse('items-detail', args=[test_item.id])
+    response = api_client.delete(url)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert Item.objects.count() == 1
+    assert QuoteRequest.objects.count() == 1
 
 
 
@@ -179,6 +233,19 @@ def test_store_update(api_client, test_user, test_store):
     assert Store.objects.count() == 1
     assert Store.objects.last().name == 'Updated Store'
 
+# Unauthorized Update
+@pytest.mark.django_db
+def test_store_unauthorized_update(api_client, test_user2, test_store):
+    api_client.force_authenticate(user=test_user2)
+    url = reverse('stores-detail', args=[test_store.id])
+    data = {
+        'name': 'Updated Store'
+    }
+    response = api_client.patch(url, data)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert Store.objects.count() == 1
+    assert Store.objects.last().name == 'Test Store'
+
 # Delete
 @pytest.mark.django_db
 def test_store_delete(api_client, test_user, test_store):
@@ -187,6 +254,16 @@ def test_store_delete(api_client, test_user, test_store):
     response = api_client.delete(url)
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert Store.objects.count() == 0
+
+# Unauthorized Delete
+@pytest.mark.django_db
+def test_store_unauthorized_delete(api_client, test_user2, test_store):
+    api_client.force_authenticate(user=test_user2)
+    url = reverse('stores-detail', args=[test_store.id])
+    response = api_client.delete(url)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert Store.objects.count() == 1
+
 
 
 # QuoteRequest Tests
@@ -230,6 +307,19 @@ def test_quoterequest_update(api_client, test_user, test_quoterequest):
     assert QuoteRequest.objects.count() == 1
     assert QuoteRequest.objects.last().details == 'Updated Quote Request'
 
+# Unauthorized Update
+@pytest.mark.django_db
+def test_quoterequest_unauthorized_update(api_client, test_user2, test_quoterequest):
+    api_client.force_authenticate(user=test_user2)
+    url = reverse('quoterequests-detail', args=[test_quoterequest.id])
+    data = {
+        'details': 'Updated Quote Request'
+    }
+    response = api_client.patch(url, data)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert QuoteRequest.objects.count() == 1
+    assert QuoteRequest.objects.last().details == 'Quote Request Details'
+
 # Delete
 @pytest.mark.django_db
 def test_quoterequest_delete(api_client, test_user, test_quoterequest):
@@ -238,3 +328,12 @@ def test_quoterequest_delete(api_client, test_user, test_quoterequest):
     response = api_client.delete(url)
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert QuoteRequest.objects.count() == 0
+
+# Unauthorized Delete
+@pytest.mark.django_db
+def test_quoterequest_unauthorized_delete(api_client, test_user2, test_quoterequest):
+    api_client.force_authenticate(user=test_user2)
+    url = reverse('quoterequests-detail', args=[test_quoterequest.id])
+    response = api_client.delete(url)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert QuoteRequest.objects.count() == 1
