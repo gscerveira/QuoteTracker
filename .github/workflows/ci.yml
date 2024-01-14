@@ -36,6 +36,5 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
-        COMPOSE_INTERACTIVE_NO_CLI: 1
       run: docker-compose exec -T web pytest
 
