@@ -16,6 +16,7 @@ def api_client():
 def test_user():
     return User.objects.create_user(username='testuser', email='test@user.com', password='test5595')
 
+@pytest.fixture
 def test_user2():
     return User.objects.create_user(username='testuser2', email='test@user2.com', password='test5595')
 

@@ -62,6 +62,7 @@ class ItemViewSet(viewsets.ModelViewSet):
 class StoreViewset(viewsets.ModelViewSet):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
