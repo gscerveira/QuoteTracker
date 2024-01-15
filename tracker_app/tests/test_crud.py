@@ -1,9 +1,10 @@
 import pytest
-from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from tracker_app.models import Project, Item, Store, QuoteRequest
+
+from tracker_app.models import Item, Project, QuoteRequest, Store
 
 User = get_user_model()
 

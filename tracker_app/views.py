@@ -1,18 +1,14 @@
-from rest_framework import viewsets, status, views, permissions
-from rest_framework.response import Response
+from django.contrib.auth import authenticate, login, logout
+from rest_framework import permissions, status, views, viewsets
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
-from django.contrib.auth import authenticate, login, logout
-from .models import Project, Item, QuoteRequest, Store
-from .serializers import (
-    ProjectSerializer,
-    ItemSerializer,
-    QuoteRequestSerializer,
-    UserSerializer,
-    LoginSerializer,
-    StoreSerializer,
-)
+from rest_framework.response import Response
+
+from .models import Item, Project, QuoteRequest, Store
+from .serializers import (ItemSerializer, LoginSerializer, ProjectSerializer,
+                          QuoteRequestSerializer, StoreSerializer,
+                          UserSerializer)
 
 # Create your views here.
 

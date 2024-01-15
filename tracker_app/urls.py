@@ -1,20 +1,11 @@
-from django.urls import path, include
+from django.urls import include, path
+from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
+                                   SpectacularSwaggerView)
 from rest_framework.routers import DefaultRouter
-from .views import (
-    ProjectViewSet,
-    ItemViewSet,
-    QuoteRequestViewset,
-    UserRegistrationView,
-    UserLoginView,
-    UserLogoutView,
-    StoreViewset,
-)
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
 
+from .views import (ItemViewSet, ProjectViewSet, QuoteRequestViewset,
+                    StoreViewset, UserLoginView, UserLogoutView,
+                    UserRegistrationView)
 
 router = DefaultRouter()
 router.register(r"projects", ProjectViewSet, basename="projects")
