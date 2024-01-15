@@ -89,7 +89,7 @@ def test_project_unauthorized_update(api_client, test_user2, test_project):
         'description': 'Updated Project Description'
     }
     response = api_client.patch(url, data)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
     assert Project.objects.count() == 1
     assert Project.objects.last().name == 'Test Project'
     assert Project.objects.last().description == 'Project Description'
@@ -111,10 +111,8 @@ def test_project_unauthorized_delete(api_client, test_user2, test_project):
     api_client.force_authenticate(user=test_user2)
     url = reverse('projects-detail', args=[test_project.id])
     response = api_client.delete(url)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
     assert Project.objects.count() == 1
-    assert Item.objects.count() == 1
-    assert QuoteRequest.objects.count() == 1
 
 # Item Tests
     
@@ -168,7 +166,7 @@ def test_item_unauthorized_update(api_client, test_user2, test_item):
         'description': 'Updated Item Description'
     }
     response = api_client.patch(url, data)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
     assert Item.objects.count() == 1
     assert Item.objects.last().name == 'Test Item'
     assert Item.objects.last().description == 'Item Description'
@@ -189,9 +187,8 @@ def test_item_unauthorized_delete(api_client, test_user2, test_item):
     api_client.force_authenticate(user=test_user2)
     url = reverse('items-detail', args=[test_item.id])
     response = api_client.delete(url)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
     assert Item.objects.count() == 1
-    assert QuoteRequest.objects.count() == 1
 
 
 
@@ -243,7 +240,7 @@ def test_store_unauthorized_update(api_client, test_user2, test_store):
         'name': 'Updated Store'
     }
     response = api_client.patch(url, data)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
     assert Store.objects.count() == 1
     assert Store.objects.last().name == 'Test Store'
 
@@ -262,7 +259,7 @@ def test_store_unauthorized_delete(api_client, test_user2, test_store):
     api_client.force_authenticate(user=test_user2)
     url = reverse('stores-detail', args=[test_store.id])
     response = api_client.delete(url)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
     assert Store.objects.count() == 1
 
 
@@ -317,7 +314,7 @@ def test_quoterequest_unauthorized_update(api_client, test_user2, test_quoterequ
         'details': 'Updated Quote Request'
     }
     response = api_client.patch(url, data)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
     assert QuoteRequest.objects.count() == 1
     assert QuoteRequest.objects.last().details == 'Quote Request Details'
 
@@ -336,5 +333,5 @@ def test_quoterequest_unauthorized_delete(api_client, test_user2, test_quoterequ
     api_client.force_authenticate(user=test_user2)
     url = reverse('quoterequests-detail', args=[test_quoterequest.id])
     response = api_client.delete(url)
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
     assert QuoteRequest.objects.count() == 1

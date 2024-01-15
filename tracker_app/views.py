@@ -67,6 +67,9 @@ class StoreViewset(viewsets.ModelViewSet):
     serializer_class = StoreSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
+    def get_queryset(self):
+        return Store.objects.filter(user=self.request.user)
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
