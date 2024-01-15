@@ -15,6 +15,9 @@ class Project(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
 
+    def get_owner(self):
+        return self.user
+
     def __str__(self):
         return self.name
 
@@ -24,6 +27,9 @@ class Item(models.Model):
     project = models.ForeignKey(Project, related_name='items', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+
+    def get_owner(self):
+        return self.project.get_owner()
 
     def __str__(self):
         return self.name
@@ -36,6 +42,9 @@ class Store(models.Model):
 
     class Meta:
         unique_together = ('user', 'name')
+
+    def get_owner(self):
+        return self.user
 
     def __str__(self):
         return f"{self.name} (User: {self.user.username})"
@@ -59,6 +68,9 @@ class QuoteRequest(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=NEED_SEND)
     details = models.TextField(blank=True)
     store = models.ForeignKey(Store,on_delete=models.CASCADE, related_name='quoterequests')
+
+    def get_owner(self):
+        return self.item.get_owner()
 
     def __str__(self):
         return f"Quote request for {self.item.name}"

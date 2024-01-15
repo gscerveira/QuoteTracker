@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status, views
+from rest_framework import viewsets, status, views, permissions
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -9,6 +9,9 @@ from .serializers import (ProjectSerializer, ItemSerializer, QuoteRequestSeriali
                           StoreSerializer)
 # Create your views here.
 
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.get_owner() == request.user
 
 class UserRegistrationView(CreateAPIView):
     serializer_class = UserSerializer
@@ -35,7 +38,7 @@ class UserLogoutView(views.APIView):
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         return Project.objects.filter(user=self.request.user)
@@ -47,7 +50,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         return Item.objects.filter(project__user=self.request.user)
@@ -62,6 +65,10 @@ class ItemViewSet(viewsets.ModelViewSet):
 class StoreViewset(viewsets.ModelViewSet):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return Store.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -70,7 +77,7 @@ class StoreViewset(viewsets.ModelViewSet):
 class QuoteRequestViewset(viewsets.ModelViewSet):
     queryset = QuoteRequest.objects.all()
     serializer_class = QuoteRequestSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         return QuoteRequest.objects.filter(item__project__user=self.request.user)
