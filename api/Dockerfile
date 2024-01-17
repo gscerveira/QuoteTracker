@@ -7,7 +7,7 @@ ENV VIRTUAL_ENV=/opt/venvs/qtracker
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Set the working directory in the Docker container
-WORKDIR /quotes_tracker
+WORKDIR /quotes_tracker/
 
 # Upgrade pip and install pip-tools
 RUN python -m pip install --upgrade pip-tools
@@ -21,7 +21,7 @@ RUN pip-compile --generate-hashes /quotes_tracker/requirements.in --output-file 
 RUN python -m pip install -r /quotes_tracker/requirements.txt
 
 # Copy the rest of your application's code into the container
-COPY . /quotes_tracker/
+COPY . /quotes_tracker/api/
 
 # Expose port 8000
 EXPOSE 8000

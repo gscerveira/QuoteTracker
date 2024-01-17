@@ -1,8 +1,9 @@
 version: '3.8'
 
 services:
-  web:
-    build: .
+  api:
+    build:
+      context: ./api
     environment:
       SECRET_KEY: ${SECRET_KEY}
       DB_NAME: ${DB_NAME}
@@ -11,7 +12,7 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
     volumes:
-      - .:/quotes_tracker
+      - ./api:/quotes_trackers
     ports:
       - "8000:8000"
     depends_on:
@@ -26,5 +27,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/quotes_trackers
+    
 volumes:
   postgres_data:
