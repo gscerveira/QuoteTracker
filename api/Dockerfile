@@ -21,7 +21,7 @@ RUN pip-compile --generate-hashes /quotes_tracker/requirements.in --output-file 
 RUN python -m pip install -r /quotes_tracker/requirements.txt
 
 # Copy the rest of your application's code into the container
-COPY . /quotes_tracker/api/
+COPY . /quotes_tracker/
 
 # Expose port 8000
 EXPOSE 8000
