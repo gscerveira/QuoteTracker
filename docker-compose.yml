@@ -1,17 +1,13 @@
 version: '3.8'
 
 services:
-  web:
-    build: .
-    environment:
-      SECRET_KEY: ${SECRET_KEY}
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
+  api:
+    build:
+      context: ./api
+    env_file:
+      - ./api/.env
     volumes:
-      - .:/quotes_tracker
+      - ./api:/quotes_tracker
     ports:
       - "8000:8000"
     depends_on:
@@ -19,12 +15,18 @@ services:
 
   db:
     image: postgres:latest
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - ./api/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/quotes_tracker
+    
 volumes:
   postgres_data:

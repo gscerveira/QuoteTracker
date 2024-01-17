@@ -9,6 +9,13 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the User model.
+
+    Serializes and deserializes User objects to and from JSON.
+    Provides validation for email, username and password fields.
+    """
+
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())], max_length=255
     )
@@ -25,6 +32,15 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        """
+        Create a new User instance.
+
+        Args:
+            validated_data (dict): Validated data for creating a new User.
+
+        Returns:
+            User: The created User instance.
+        """
         user = User.objects.create_user(
             username=validated_data["username"], email=validated_data["email"]
         )
@@ -34,11 +50,23 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
+    """
+    Serializer for user login.
+
+    Serializes and deserializes login credentials to and from JSON.
+    """
+
     username = serializers.CharField()
     password = serializers.CharField()
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Project model.
+
+    Serializes and deserializes Project objects to and from JSON.
+    """
+
     class Meta:
         model = Project
         fields = ["id", "user", "name", "description"]
@@ -46,18 +74,36 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Item model.
+
+    Serializes and deserializes Item objects to and from JSON.
+    """
+
     class Meta:
         model = Item
         fields = ["id", "project", "name", "description"]
 
 
 class QuoteRequestSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the QuoteRequest model.
+
+    Serializes and deserializes QuoteRequest objects to and from JSON.
+    """
+
     class Meta:
         model = QuoteRequest
         fields = ["id", "item", "status", "details", "store"]
 
 
 class StoreSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Store model.
+
+    Serializes and deserializes Store objects to and from JSON.
+    """
+
     class Meta:
         model = Store
         fields = ["id", "name", "user"]

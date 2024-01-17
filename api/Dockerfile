@@ -7,7 +7,7 @@ ENV VIRTUAL_ENV=/opt/venvs/qtracker
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Set the working directory in the Docker container
-WORKDIR /quotes_tracker
+WORKDIR /quotes_tracker/
 
 # Upgrade pip and install pip-tools
 RUN python -m pip install --upgrade pip-tools

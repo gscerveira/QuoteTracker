@@ -26,3 +26,24 @@ urlpatterns = [
     ),
     path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
+
+"""
+URL patterns for the quotes tracker application.
+
+This module defines the URL patterns for the quotes tracker application.
+It includes the registration, login, and logout views, as well as the views
+for managing projects, items, quote requests, and stores.
+
+The URLs are defined using the Django `path` function and are mapped to the
+corresponding view classes or functions.
+
+The `router` object is used to automatically generate the URLs for all the
+viewsets.
+
+The `SpectacularAPIView`, `SpectacularSwaggerView`, and `SpectacularRedocView`
+views are used to generate the API schema, Swagger UI, and ReDoc documentation
+for the API.
+
+Note: This module assumes that the necessary views and viewsets are imported
+from the `.views` module.
+"""
