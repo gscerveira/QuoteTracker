@@ -1,3 +1,22 @@
+"""
+This module contains test cases for CRUD operations on the models in the `tracker_app` app.
+
+The test cases cover the following models:
+- Project
+- Item
+- Store
+- QuoteRequest
+
+Each model has test cases for the following operations:
+- Read
+- Create
+- Update
+- Delete
+
+The test cases use the Django test framework, pytest, and the Django REST framework's APIClient for making API requests.
+
+"""
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
