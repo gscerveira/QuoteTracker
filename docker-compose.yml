@@ -5,11 +5,6 @@ services:
     image: postgres:latest
     env_file:
       - ./api/.env
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 120s
-      timeout: 120s
-      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
@@ -23,8 +18,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   frontend:
     build:
