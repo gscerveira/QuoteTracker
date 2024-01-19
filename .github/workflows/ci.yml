@@ -40,7 +40,7 @@ jobs:
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      run: docker-compose up -d && sleep 20s && docker-compose ps && docker-compose logs api
+      run: docker-compose up -d --wait && docker-compose ps && docker-compose logs api
 
     - name: Run tests in the Docker environment
       env:
