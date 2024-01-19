@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  localhost:
+  db:
     image: postgres:latest
     env_file:
       - ./api/.env
@@ -19,8 +19,9 @@ services:
       - ./api:/quotes_tracker
     ports:
       - "8000:8000"
+    restart: always
     depends_on:
-      - localhost
+      - db
 
   frontend:
     build:
