@@ -22,13 +22,13 @@ services:
     depends_on:
       - db
   
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/quotes_tracker
+  #frontend:
+  #  build:
+  #    context: ./frontend
+  #  ports:
+  #    - "3000:3000"
+  #  volumes:
+  #    - ./frontend:/quotes_tracker
     
 volumes:
   postgres_data:
