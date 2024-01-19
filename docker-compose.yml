@@ -6,7 +6,7 @@ services:
     env_file:
       - ./api/.env
     ports:
-      - "5432:5432"
+      - "5432/tcp"
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
