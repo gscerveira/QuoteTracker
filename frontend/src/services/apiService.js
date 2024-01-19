@@ -11,14 +11,14 @@ const register = (username, email, password) => {
 };
 
 const login = (username, password) => {
-    return axios.post('${API_URL}/login/', {
+    return axios.post(API_URL + 'login/', {
         username,
         password
     });
 };
 
 const fetchProjects = () => {
-    return axios.get('${API_URL}/projects-list/');
+    return axios.get(API_URL + 'projects-list/');
 };
 
 export { register, login, fetchProjects };
