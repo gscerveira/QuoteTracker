@@ -12,7 +12,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 300s
+      start_period: 30s
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
@@ -26,8 +26,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      db:
-        condition: service_completed_successfully
+      - db
   
   frontend:
     build:
