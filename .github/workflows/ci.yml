@@ -23,32 +23,11 @@ jobs:
         cat api/.env
 
     - name: Build the Docker image
-      env:
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: docker-compose build
 
     - name: Start the Docker containers
-      env:
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: docker-compose up -d && docker-compose ps && docker-compose logs api
 
     - name: Run tests in the Docker environment
-      env:
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: docker-compose exec -T api pytest
 
