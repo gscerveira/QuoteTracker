@@ -96,7 +96,7 @@ class Store(models.Model):
         name (CharField): The name of the store.
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, related_name="stores", on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
