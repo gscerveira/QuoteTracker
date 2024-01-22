@@ -117,7 +117,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
     Permissions:
         Allow only authenticated users who are the owners of the projects.
     """
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
@@ -150,7 +149,6 @@ class ItemViewSet(viewsets.ModelViewSet):
     Permissions:
         Allow only authenticated users who are the owners of the associated projects.
     """
-    queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated, IsOwner]
     filter_backends = [DjangoFilterBackend]
@@ -189,7 +187,6 @@ class StoreViewset(viewsets.ModelViewSet):
     Permissions:
         Allow only authenticated users who are the owners of the stores.
     """
-    queryset = Store.objects.all()
     serializer_class = StoreSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
@@ -222,7 +219,6 @@ class QuoteRequestViewset(viewsets.ModelViewSet):
     Permissions:
         Allow only authenticated users who are the owners of the associated items.
     """
-    queryset = QuoteRequest.objects.all()
     serializer_class = QuoteRequestSerializer
     permission_classes = [IsAuthenticated, IsOwner]
     filter_backends = [DjangoFilterBackend]
