@@ -6,9 +6,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" >
-          <Route path="/" element={<AuthForm />} />
-        </Route>
+        <Route path="/" element={<AuthForm />} />
       </Routes>
     </Router>
   );
