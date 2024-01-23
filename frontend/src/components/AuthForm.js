@@ -63,7 +63,7 @@ const AuthForm = () => {
                 <button type="submit">{isLogin ? 'Login' : 'Register'}</button>
             </form>
             <button onClick={toggleFormType}>
-                Switch to {isLogin ? 'Register' : 'Login'}
+                {isLogin ? 'Register' : 'Login'}
             </button>
         </div>
     );
