@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { TextField, Button, Box, Tab, Tabs } from '@mui/material';
 import { register, login } from '../services/apiService';
+import { useNavigate } from 'react-router-dom';
 
 const AuthForm = () => {
     const [formData, setFormData] = useState({
@@ -7,6 +9,8 @@ const AuthForm = () => {
         email: '',
         password: '',
     });
+
+    const navigate = useNavigate();
 
     const [isLogin, setIsLogin] = useState(true);
 
@@ -19,6 +23,7 @@ const AuthForm = () => {
         try {
             if (isLogin) {
                 const response = await login(formData.username, formData.password);
+                navigate('/dashboard')
             } else {
                 const response = await register(formData.username, formData.email, formData.password);
                 console.log(response.data);
@@ -29,45 +34,43 @@ const AuthForm = () => {
         }
     };
 
-    const toggleFormType = () => {
-        setIsLogin(!isLogin);
+    const handleTabChange = (e, newValue) => {
+        setIsLogin(newValue === 0);
     };
 
     return (
-        <div>
-            <h2>{isLogin ? 'Login' : 'Register'}</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Username"
-                    value={formData.username}
-                    onChange={handleChange}
-                />
-                {!isLogin && (
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={formData.email}
-                        onChange={handleChange}
-                    />
-                )}
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
-                <button type="submit">{isLogin ? 'Login' : 'Register'}</button>
-            </form>
-            <button onClick={toggleFormType}>
-                Switch to {isLogin ? 'Register' : 'Login'}
-            </button>
-        </div>
-    );
-};
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Tabs value={isLogin ? 0 : 1} onChange={handleTabChange}>
+            <Tab label="Login" />
+            <Tab label="Register" />
+          </Tabs>
+          <TextField
+            name="username"
+            label="Username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+          {!isLogin && (
+            <TextField
+              type="email"
+              name="email"
+              label="Email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          )}
+          <TextField
+            type="password"
+            name="password"
+            label="Password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <Button type="submit" variant="contained">{isLogin ? 'Login' : 'Register'}</Button>
+        </Box>
+      );
+    };
+
 
 export default AuthForm;
 

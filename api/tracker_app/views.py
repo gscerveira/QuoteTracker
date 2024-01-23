@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, views, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView
@@ -116,7 +117,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
     Permissions:
         Allow only authenticated users who are the owners of the projects.
     """
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
@@ -149,9 +149,11 @@ class ItemViewSet(viewsets.ModelViewSet):
     Permissions:
         Allow only authenticated users who are the owners of the associated projects.
     """
-    queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["project"]
+
 
     def get_queryset(self):
         return Item.objects.filter(project__user=self.request.user)
@@ -185,7 +187,6 @@ class StoreViewset(viewsets.ModelViewSet):
     Permissions:
         Allow only authenticated users who are the owners of the stores.
     """
-    queryset = Store.objects.all()
     serializer_class = StoreSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
@@ -218,9 +219,10 @@ class QuoteRequestViewset(viewsets.ModelViewSet):
     Permissions:
         Allow only authenticated users who are the owners of the associated items.
     """
-    queryset = QuoteRequest.objects.all()
     serializer_class = QuoteRequestSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["item"]
 
     def get_queryset(self):
         return QuoteRequest.objects.filter(item__project__user=self.request.user)
