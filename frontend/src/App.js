@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import AuthForm from './components/AuthForm';
+import Dashboard from './components/Dashboard';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
             <AuthForm />
           </Box>
         } />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );

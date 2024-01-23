@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Tab, Tabs } from '@mui/material';
 import { register, login } from '../services/apiService';
+import { useNavigate } from 'react-router-dom';
 
 const AuthForm = () => {
     const [formData, setFormData] = useState({
@@ -8,6 +9,8 @@ const AuthForm = () => {
         email: '',
         password: '',
     });
+
+    const navigate = useNavigate();
 
     const [isLogin, setIsLogin] = useState(true);
 
@@ -20,6 +23,7 @@ const AuthForm = () => {
         try {
             if (isLogin) {
                 const response = await login(formData.username, formData.password);
+                navigate('/dashboard')
             } else {
                 const response = await register(formData.username, formData.email, formData.password);
                 console.log(response.data);
@@ -67,6 +71,6 @@ const AuthForm = () => {
       );
     };
 
-    
+
 export default AuthForm;
 

@@ -19,7 +19,7 @@ const login = (username, password) => {
 
 const fetchProjects = async () => {
     try {
-        const response = await axios.get(API_URL + 'projects-list/');
+        const response = await axios.get(API_URL + 'projects/', { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error fetching projects:', error);
@@ -29,7 +29,7 @@ const fetchProjects = async () => {
 
 const createProject = async (projectData) => {
     try {
-        const response = await axios.post(API_URL + 'projects/', projectData);
+        const response = await axios.post(API_URL + 'projects/', projectData, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error creating project:', error);
@@ -39,7 +39,7 @@ const createProject = async (projectData) => {
 
 const fetchItems = async (projectId) => { 
     try {
-        const response = await axios.get(API_URL + 'items/?project=', projectId);
+        const response = await axios.get(API_URL + 'items/?project=', projectId, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error fetching items:', error);
@@ -49,7 +49,7 @@ const fetchItems = async (projectId) => {
 
 const createItem = async (itemData) => {
     try {
-        const response = await axios.post(API_URL + 'items/', itemData);
+        const response = await axios.post(API_URL + 'items/', itemData, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error creating item:', error);
@@ -59,7 +59,7 @@ const createItem = async (itemData) => {
 
 const fetchQuoteRequests = async (itemId) => {
     try {
-        const response = await axios.get(API_URL + 'quoterequests/?item=', itemId);
+        const response = await axios.get(API_URL + 'quoterequests/?item=', itemId, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error fetching quote requests:', error);
@@ -69,7 +69,7 @@ const fetchQuoteRequests = async (itemId) => {
 
 const createQuoteRequest = async (quoteRequestData) => {
     try {
-        const response = await axios.post(API_URL + 'quoterequests/', quoteRequestData);
+        const response = await axios.post(API_URL + 'quoterequests/', quoteRequestData, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error creating quote request:', error);
@@ -79,7 +79,7 @@ const createQuoteRequest = async (quoteRequestData) => {
 
 const fetchStores = async () => {
     try {
-        const response = await axios.get(API_URL + 'stores/');
+        const response = await axios.get(API_URL + 'stores/', { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error fetching stores:', error);
@@ -89,7 +89,7 @@ const fetchStores = async () => {
 
 const createStore = async (storeData) => {
     try {
-        const response = await axios.post(API_URL + 'stores/', storeData);
+        const response = await axios.post(API_URL + 'stores/', storeData, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error creating store:', error);
