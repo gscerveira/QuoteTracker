@@ -5,7 +5,6 @@ The test cases cover the following models:
 - Project
 - Item
 - Store
-- QuoteRequest
 
 Each model has test cases for the following operations:
 - Read
@@ -23,7 +22,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from tracker_app.models import Item, Project, QuoteRequest, Store
+from tracker_app.models import Item, Project, Store
 
 User = get_user_model()
 
@@ -64,13 +63,6 @@ def test_item(test_project):
 @pytest.fixture
 def test_store(test_user):
     return Store.objects.create(user=test_user, name="Test Store")
-
-
-@pytest.fixture
-def test_quoterequest(test_item, test_store):
-    return QuoteRequest.objects.create(
-        item=test_item, details="Quote Request Details", store=test_store
-    )
 
 
 # Project Tests
@@ -134,7 +126,6 @@ def test_project_delete(api_client, test_user, test_project):
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert Project.objects.count() == 0
     assert Item.objects.count() == 0
-    assert QuoteRequest.objects.count() == 0
 
 
 # Unauthorized Delete
@@ -211,7 +202,6 @@ def test_item_delete(api_client, test_user, test_item):
     response = api_client.delete(url)
     assert response.status_code == status.HTTP_204_NO_CONTENT
     assert Item.objects.count() == 0
-    assert QuoteRequest.objects.count() == 0
 
 
 # Unauthorized Delete
@@ -290,75 +280,3 @@ def test_store_unauthorized_delete(api_client, test_user2, test_store):
     response = api_client.delete(url)
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert Store.objects.count() == 1
-
-
-# QuoteRequest Tests
-# Read
-@pytest.mark.django_db
-def test_quoterequest_list(api_client, test_user, test_quoterequest):
-    api_client.force_authenticate(user=test_user)
-    url = reverse("quoterequests-list")
-    response = api_client.get(url)
-    assert response.status_code == status.HTTP_200_OK
-    assert len(response.data) == 1
-    assert response.data[0]["details"] == "Quote Request Details"
-
-
-# Create
-@pytest.mark.django_db
-def test_quoterequest_create(api_client, test_user, test_item, test_store):
-    api_client.force_authenticate(user=test_user)
-    url = reverse("quoterequests-list")
-    data = {
-        "item": test_item.id,
-        "details": "New Quote Request",
-        "store": test_store.id,
-    }
-    response = api_client.post(url, data)
-    assert response.status_code == status.HTTP_201_CREATED
-    assert QuoteRequest.objects.count() == 1
-    assert QuoteRequest.objects.last().details == "New Quote Request"
-
-
-# Update
-@pytest.mark.django_db
-def test_quoterequest_update(api_client, test_user, test_quoterequest):
-    api_client.force_authenticate(user=test_user)
-    url = reverse("quoterequests-detail", args=[test_quoterequest.id])
-    data = {"details": "Updated Quote Request"}
-    response = api_client.patch(url, data)
-    assert response.status_code == status.HTTP_200_OK
-    assert QuoteRequest.objects.count() == 1
-    assert QuoteRequest.objects.last().details == "Updated Quote Request"
-
-
-# Unauthorized Update
-@pytest.mark.django_db
-def test_quoterequest_unauthorized_update(api_client, test_user2, test_quoterequest):
-    api_client.force_authenticate(user=test_user2)
-    url = reverse("quoterequests-detail", args=[test_quoterequest.id])
-    data = {"details": "Updated Quote Request"}
-    response = api_client.patch(url, data)
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert QuoteRequest.objects.count() == 1
-    assert QuoteRequest.objects.last().details == "Quote Request Details"
-
-
-# Delete
-@pytest.mark.django_db
-def test_quoterequest_delete(api_client, test_user, test_quoterequest):
-    api_client.force_authenticate(user=test_user)
-    url = reverse("quoterequests-detail", args=[test_quoterequest.id])
-    response = api_client.delete(url)
-    assert response.status_code == status.HTTP_204_NO_CONTENT
-    assert QuoteRequest.objects.count() == 0
-
-
-# Unauthorized Delete
-@pytest.mark.django_db
-def test_quoterequest_unauthorized_delete(api_client, test_user2, test_quoterequest):
-    api_client.force_authenticate(user=test_user2)
-    url = reverse("quoterequests-detail", args=[test_quoterequest.id])
-    response = api_client.delete(url)
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert QuoteRequest.objects.count() == 1

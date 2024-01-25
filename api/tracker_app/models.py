@@ -59,12 +59,28 @@ class Item(models.Model):
         id (UUIDField): The unique identifier for the item.
         project (ForeignKey): The project that the item belongs to.
         name (CharField): The name of the item.
+        status (CharField): The status of the item.
         description (TextField): The description of the item.
     """
+
+    NEED_SEND = "need_to_send"
+    SENT = "sent"
+    RECEIVED = "received"
+    NEED_RESEND = "need_to_resend"
+    DONE = "done"
+
+    STATUS_CHOICES = [
+        (NEED_SEND, "Need to Send Request"),
+        (SENT, "Request Sent"),
+        (RECEIVED, "Quote Received"),
+        (NEED_RESEND, "Need to Resend Request"),
+        (DONE, "Done"),
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     project = models.ForeignKey(Project, related_name="items", on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=NEED_SEND)
     description = models.TextField(blank=True)
 
     def get_owner(self):
@@ -120,63 +136,3 @@ class Store(models.Model):
             str: The name of the store and the username of the owner.
         """
         return f"{self.name} (User: {self.user.username})"
-
-
-class QuoteRequest(models.Model):
-    """
-    Represents a quote request in the system.
-
-    Attributes:
-        NEED_SEND (str): The status indicating that the request needs to be sent.
-        SENT (str): The status indicating that the request has been sent.
-        RECEIVED (str): The status indicating that a quote has been received.
-        NEED_RESEND (str): The status indicating that the request needs to be resent.
-
-        STATUS_CHOICES (list): The choices for the status field.
-
-        id (UUIDField): The unique identifier for the quote request.
-        item (ForeignKey): The item that the quote request is for.
-        status (CharField): The status of the quote request.
-        details (TextField): The details of the quote request.
-        store (ForeignKey): The store that the quote request is sent to.
-    """
-
-    NEED_SEND = "need_to_send"
-    SENT = "sent"
-    RECEIVED = "received"
-    NEED_RESEND = "need_to_resend"
-
-    STATUS_CHOICES = [
-        (NEED_SEND, "Need to Send Request"),
-        (SENT, "Request Sent"),
-        (RECEIVED, "Quote Received"),
-        (NEED_RESEND, "Need to Resend Request"),
-    ]
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    item = models.ForeignKey(
-        Item, related_name="quoterequests", on_delete=models.CASCADE
-    )
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=NEED_SEND)
-    details = models.TextField(blank=True)
-    store = models.ForeignKey(
-        Store, on_delete=models.CASCADE, related_name="quoterequests"
-    )
-
-    def get_owner(self):
-        """
-        Gets the owner of the quote request.
-
-        Returns:
-            User: The user who owns the project that the item belongs to.
-        """
-        return self.item.get_owner()
-
-    def __str__(self):
-        """
-        Get a string representation of the quote request.
-
-        Returns:
-            str: A string representation of the quote request.
-        """
-        return f"Quote request for {self.item.name}"

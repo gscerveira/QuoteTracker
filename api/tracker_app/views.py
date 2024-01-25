@@ -6,9 +6,8 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Item, Project, QuoteRequest, Store
-from .serializers import (ItemSerializer, LoginSerializer, ProjectSerializer,
-                          QuoteRequestSerializer, StoreSerializer,
+from .models import Item, Project, Store
+from .serializers import (ItemSerializer, LoginSerializer, ProjectSerializer, StoreSerializer,
                           UserSerializer)
 
 # Create your views here.
@@ -195,41 +194,3 @@ class StoreViewset(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
-class QuoteRequestViewset(viewsets.ModelViewSet):
-    """
-    ViewSet for quote requests.
-
-    Allows users to perform CRUD operations on quote requests.
-
-    Model:
-        QuoteRequest
-
-    Serializer Class:
-        QuoteRequestSerializer
-
-    HTTP Methods:
-        GET: Retrieve a list of quote requests.
-        POST: Create a new quote request.
-        PUT: Update an existing quote request.
-        PATCH: Partially update an existing quote request.
-        DELETE: Delete an existing quote request.
-
-    Permissions:
-        Allow only authenticated users who are the owners of the associated items.
-    """
-    serializer_class = QuoteRequestSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["item"]
-
-    def get_queryset(self):
-        return QuoteRequest.objects.filter(item__project__user=self.request.user)
-
-    def perform_create(self, serializer):
-        item = serializer.validated_data.get("item")
-        user_projects_items = Item.objects.filter(project__user=self.request.user)
-        if item not in user_projects_items:
-            raise PermissionDenied("Item doesn't exist")
-        serializer.save()

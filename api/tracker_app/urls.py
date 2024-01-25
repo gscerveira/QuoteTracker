@@ -3,14 +3,12 @@ from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
                                    SpectacularSwaggerView)
 from rest_framework.routers import DefaultRouter
 
-from .views import (ItemViewSet, ProjectViewSet, QuoteRequestViewset,
-                    StoreViewset, UserLoginView, UserLogoutView,
+from .views import (ItemViewSet, ProjectViewSet, StoreViewset, UserLoginView, UserLogoutView,
                     UserRegistrationView)
 
 router = DefaultRouter()
 router.register(r"projects", ProjectViewSet, basename="projects")
 router.register(r"items", ItemViewSet, basename="items")
-router.register(r"quoterequests", QuoteRequestViewset, basename="quoterequests")
 router.register(r"stores", StoreViewset, basename="stores")
 
 urlpatterns = [

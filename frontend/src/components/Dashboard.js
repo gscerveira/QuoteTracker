@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography } from '@mui/material';
 import { fetchProjects, createProject } from '../services/apiService';
+import GenericDialog from './GenericDialog';
 
 const drawerWidth = 240;
 
 const Dashboard = () => {
     const [projects, setProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(null);
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [currentFormData, setCurrentFormData] = useState({ name: '', description: '' });
+
+    const handleDialogOpen = () => setDialogOpen(true);
+    const handleDialogClose = () => setDialogOpen(false);
 
     useEffect(() => {
         // Fetch projects when component mounts
