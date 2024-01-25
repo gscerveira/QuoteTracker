@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import Item, Project, QuoteRequest, Store
+from .models import Item, Project, Store
 
 User = get_user_model()
 
@@ -82,19 +82,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ["id", "project", "name", "description"]
-
-
-class QuoteRequestSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the QuoteRequest model.
-
-    Serializes and deserializes QuoteRequest objects to and from JSON.
-    """
-
-    class Meta:
-        model = QuoteRequest
-        fields = ["id", "item", "status", "details", "store"]
+        fields = ["id", "project", "name", "status", "description"]
 
 
 class StoreSerializer(serializers.ModelSerializer):
