@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+axios.default.xsrfCookieName = 'csrftoken';
+axios.default.xsrfHeaderName = 'X-CSRFToken';
+
 const API_URL = 'http://localhost:8000/tracker_app/';
 
 const register = (username, email, password) => {
