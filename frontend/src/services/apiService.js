@@ -13,11 +13,17 @@ const register = (username, email, password) => {
     });
 };
 
-const login = (username, password) => {
+const login = (username, password, csrfToken) => {
     return axios.post(API_URL + 'login/', {
         username,
         password
-    }, { withCredentials: true });
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        withCredentials: true
+    });
 };
 
 const fetchProjects = async () => {
@@ -40,7 +46,7 @@ const createProject = async (projectData) => {
     }
 };
 
-const fetchItems = async (projectId) => { 
+const fetchItems = async (projectId) => {
     try {
         const response = await axios.get(API_URL + 'items/?project=', projectId, { withCredentials: true });
         return response.data;
