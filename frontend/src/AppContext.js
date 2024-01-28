@@ -1,5 +1,5 @@
-import React, { createContext, useState } from 'react';
-import { createProject } from './services/apiService';
+import React, { createContext, useState, useCallback } from 'react';
+import { createProject, fetchProjects } from './services/apiService';
 
 export const AppContext = createContext();
 
@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
     };
 
     const createAndAddProject = async (projectData) => {
-        try{
+        try {
             const newProject = await createProject(projectData);
             addProject(newProject);
         } catch (error) {
@@ -24,10 +24,18 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    // Other functions will be added here as needed
+    const getProjects = useCallback(async () => {
+        try {
+            const fetchedProjects = await fetchProjects();
+            setProjects(fetchedProjects);
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+            throw error;
+        }
+    }, []);
 
     return (
-        <AppContext.Provider value={{ projects, currentProject, addProject, createAndAddProject }}>
+        <AppContext.Provider value={{ projects, currentProject, addProject, createAndAddProject, getProjects }}>
             {children}
         </AppContext.Provider>
     );

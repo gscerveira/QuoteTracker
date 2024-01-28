@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-axios.default.xsrfCookieName = 'csrftoken';
-axios.default.xsrfHeaderName = 'X-CSRFToken';
 
 const API_URL = 'http://localhost:8000/tracker_app/';
 
@@ -26,9 +24,14 @@ const login = (username, password, csrfToken) => {
     });
 };
 
-const fetchProjects = async () => {
+const fetchProjects = async (csrfToken) => {
     try {
-        const response = await axios.get(API_URL + 'projects/', { withCredentials: true });
+        const response = await axios.get(API_URL + 'projects/', {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }, withCredentials: true
+        });
         return response.data;
     } catch (error) {
         console.error('Error fetching projects:', error);
@@ -36,9 +39,14 @@ const fetchProjects = async () => {
     }
 };
 
-const createProject = async (projectData) => {
+const createProject = async (projectData, csrfToken) => {
     try {
-        const response = await axios.post(API_URL + 'projects/', projectData, { withCredentials: true });
+        const response = await axios.post(API_URL + 'projects/', projectData, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }, withCredentials: true
+        });
         return response.data;
     } catch (error) {
         console.error('Error creating project:', error);

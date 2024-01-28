@@ -7,9 +7,8 @@ import GenericDialog from './GenericDialog';
 const drawerWidth = 240;
 
 const Dashboard = () => {
-    const { projects, currentProject, createAndAddProject } = useContext(AppContext);
+    const { projects, currentProject, createAndAddProject, getProjects } = useContext(AppContext);
 
-    //const [projects, setProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(null);
 
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -37,14 +36,10 @@ const Dashboard = () => {
         handleDialogClose();
     };
 
-    //useEffect(() => {
-    //    // Fetch projects when component mounts
-    //    const fetchAndSetProjects = async () => {
-    //        const fetchedProjects = await fetchProjects();
-    //        setProjects(fetchedProjects);
-    //    };
-    //    fetchAndSetProjects();
-    //}, []);
+    useEffect(() => {
+        // Fetch projects when component mounts
+        getProjects();
+    }, [getProjects]);
 
     const handleProjectClick = (project) => {
         setSelectedProject(project);
