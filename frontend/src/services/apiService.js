@@ -1,6 +1,12 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
+
 
 const API_URL = 'http://localhost:8000/tracker_app/';
+
+const getCsrfToken = () => {
+    return Cookies.get('csrftoken');
+};
 
 const register = (username, email, password) => {
     return axios.post(API_URL + 'register/', {
@@ -14,12 +20,17 @@ const login = (username, password) => {
     return axios.post(API_URL + 'login/', {
         username,
         password
-    }, { withCredentials: true });
+    }, {
+        headers: { 'X-CSRFToken': getCsrfToken() },
+        withCredentials: true
+    });
 };
 
 const fetchProjects = async () => {
     try {
-        const response = await axios.get(API_URL + 'projects/', { withCredentials: true });
+        const response = await axios.get(API_URL + 'projects/', {
+            withCredentials: true
+        });
         return response.data;
     } catch (error) {
         console.error('Error fetching projects:', error);
@@ -29,7 +40,10 @@ const fetchProjects = async () => {
 
 const createProject = async (projectData) => {
     try {
-        const response = await axios.post(API_URL + 'projects/', projectData, { withCredentials: true });
+        const response = await axios.post(API_URL + 'projects/', projectData, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
         return response.data;
     } catch (error) {
         console.error('Error creating project:', error);
@@ -37,7 +51,7 @@ const createProject = async (projectData) => {
     }
 };
 
-const fetchItems = async (projectId) => { 
+const fetchItems = async (projectId) => {
     try {
         const response = await axios.get(API_URL + 'items/?project=', projectId, { withCredentials: true });
         return response.data;
@@ -49,7 +63,10 @@ const fetchItems = async (projectId) => {
 
 const createItem = async (itemData) => {
     try {
-        const response = await axios.post(API_URL + 'items/', itemData, { withCredentials: true });
+        const response = await axios.post(API_URL + 'items/', itemData, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
         return response.data;
     } catch (error) {
         console.error('Error creating item:', error);
@@ -89,7 +106,10 @@ const fetchStores = async () => {
 
 const createStore = async (storeData) => {
     try {
-        const response = await axios.post(API_URL + 'stores/', storeData, { withCredentials: true });
+        const response = await axios.post(API_URL + 'stores/', storeData, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
         return response.data;
     } catch (error) {
         console.error('Error creating store:', error);
