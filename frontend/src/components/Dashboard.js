@@ -7,7 +7,7 @@ import GenericDialog from './GenericDialog';
 const drawerWidth = 240;
 
 const Dashboard = () => {
-    const { projects, currentProject, createAndAddProject, getProjects } = useContext(AppContext);
+    const { projects, currentProject, createAndAddProject, getProjects, getStores, createStore, getItems, createItem, stores } = useContext(AppContext);
 
     const [selectedProject, setSelectedProject] = useState(null);
 
@@ -41,8 +41,28 @@ const Dashboard = () => {
         getProjects();
     }, [getProjects]);
 
+    useEffect(() => {
+        getStores();
+    }, [getStores]);
+
     const handleProjectClick = (project) => {
         setSelectedProject(project);
+    };
+
+    const handleAddItem = async (itemData) => {
+        // Check if store exists, create it if it doesn't
+        let store = stores.find(store => store.name === itemData.storeName);
+        if (!store) {
+            store = await createStore({ name: itemData.storeName });
+        }
+        try {
+            // Create the item
+            const item = await createItem({ ...itemData, store: store.id });
+            // Refresh the items list
+            await getItems();
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
