@@ -7,7 +7,7 @@ import GenericDialog from './GenericDialog';
 const drawerWidth = 240;
 
 const Dashboard = () => {
-    const { projects, currentProject, createAndAddProject, getProjects, getStores, createStore, getItems, createItem, stores } = useContext(AppContext);
+    const { projects, currentProject, createAndAddProject, createAndAddItem, getProjects, getStores, createStore, getItems, createItem, stores } = useContext(AppContext);
 
     const [selectedProject, setSelectedProject] = useState(null);
 
@@ -47,6 +47,23 @@ const Dashboard = () => {
         await createAndAddProject(currentFormData);
         handleDialogClose();
     };
+
+    const handleItemFormSubmit = async () => {
+        if (!newItemFormData.name.trim() || !newItemFormData.description.trim() || !newItemFormData.storeName.trim()) {
+            alert('Please fill in all the fields');
+            return;
+        }
+
+        try {
+            await createAndAddItem(newItemFormData, currentProject.id);
+            handleItemDialogClose();
+        } catch (error) {
+            console.error('Error:', error);
+            // Appropriate handling of error will be added here
+        }
+
+        
+    }
 
     useEffect(() => {
         // Fetch projects when component mounts

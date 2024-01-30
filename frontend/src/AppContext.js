@@ -36,12 +36,13 @@ export const AppProvider = ({ children }) => {
             }
 
             // Create item
-            const newItem = await createItem({...itemData, store: store.id, project: currentProjectId});
+            const newItem = await createItem({ ...itemData, store: store.id, project: currentProjectId });
             setItems(prevItems => [...prevItems, newItem]); // Add new item to items state
         } catch (error) {
             console.error('Error creating item:', error);
             // Appropriate handling of error will be added here
-        }
+        };
+    };
 
     const getProjects = useCallback(async () => {
         try {
@@ -96,7 +97,7 @@ export const AppProvider = ({ children }) => {
     return (
         <AppContext.Provider value={{
             projects, stores, items, currentProject, addProject, createAndAddProject,
-            getProjects, getStores, addStore, getItems, addItem
+            getProjects, getStores, addStore, getItems, addItem, createAndAddItem
         }}>
             {children}
         </AppContext.Provider>
