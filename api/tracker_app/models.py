@@ -81,6 +81,7 @@ class Item(models.Model):
     project = models.ForeignKey(Project, related_name="items", on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=NEED_SEND)
+    store = models.ForeignKey("Store", related_name="items", on_delete=models.CASCADE)
     description = models.TextField(blank=True)
 
     def get_owner(self):

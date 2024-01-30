@@ -1,5 +1,6 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField,
+Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
 const GenericDialog = ({ open, handleClose, title, fields, handleSubmit, handleChange }) => {
     return (

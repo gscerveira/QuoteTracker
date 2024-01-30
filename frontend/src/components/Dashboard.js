@@ -12,7 +12,9 @@ const Dashboard = () => {
     const [selectedProject, setSelectedProject] = useState(null);
 
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [itemDialogOpen, setItemDialogOpen] = useState(false);
     const [currentFormData, setCurrentFormData] = useState({ name: '', description: '' });
+    const [newItemFormData, setNewItemFormData] = useState({ name: '', description: '', storeName: '' });
 
     const handleAddProject = () => {
         setCurrentFormData({ name: '', description: '' });
@@ -21,6 +23,8 @@ const Dashboard = () => {
 
     const handleDialogOpen = () => setDialogOpen(true);
     const handleDialogClose = () => setDialogOpen(false);
+    const handleItemDialogOpen = () => setItemDialogOpen(true);
+    const handleItemDialogClose = () => setItemDialogOpen(false);
 
     const handleFormChange = (event) => {
         setCurrentFormData({ ...currentFormData, [event.target.name]: event.target.value });
@@ -81,9 +85,10 @@ const Dashboard = () => {
                     anchor="left"
                 >
                     <List>
-                        {projects.map((project, index) => (
+                        {projects.map((project) => (
                             <ListItem button key={project.id} onClick={() => handleProjectClick(project)}>
                                 <ListItemText primary={project.name} />
+                                <Button onClick={handleItemDialogOpen}>Add Item</Button>
                             </ListItem>
                         ))}
                     </List>
