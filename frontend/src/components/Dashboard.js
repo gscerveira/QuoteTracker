@@ -38,7 +38,7 @@ const Dashboard = () => {
         setCurrentFormData({ ...currentFormData, [event.target.name]: event.target.value });
     };
 
-    const handleFormSubmit = async () => {
+    const handleProjectFormSubmit = async () => {
         if (!currentFormData.name.trim() || !currentFormData.description.trim()) {
             alert('Please fill in all the fields');
             return;

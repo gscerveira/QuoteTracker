@@ -26,6 +26,23 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    const createAndAddItem = async (itemData, currentProjectId) => {
+        try {
+            // Check if store exists, create it if it doesn't
+            const store = stores.find(store => store.name === itemData.storeName);
+            if (!store) {
+                const newStore = await createStore({ name: itemData.storeName });
+                setStores(prevStores => [...prevStores, newStore]); // Add new store to stores state
+            }
+
+            // Create item
+            const newItem = await createItem({...itemData, store: store.id, project: currentProjectId});
+            setItems(prevItems => [...prevItems, newItem]); // Add new item to items state
+        } catch (error) {
+            console.error('Error creating item:', error);
+            // Appropriate handling of error will be added here
+        }
+
     const getProjects = useCallback(async () => {
         try {
             const fetchedProjects = await fetchProjects();
