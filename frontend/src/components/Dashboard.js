@@ -15,10 +15,18 @@ const Dashboard = () => {
     const [itemDialogOpen, setItemDialogOpen] = useState(false);
     const [currentFormData, setCurrentFormData] = useState({ name: '', description: '' });
     const [newItemFormData, setNewItemFormData] = useState({ name: '', description: '', storeName: '' });
+    const [dialogContext, setDialogContext] = useState(null); // ['project', 'item']
 
     const handleAddProject = () => {
+        setDialogContext('project');
         setCurrentFormData({ name: '', description: '' });
         handleDialogOpen();
+    };
+
+    const handleAddItem = () => {
+        setDialogContext('item');
+        setNewItemFormData({ name: '', description: '', storeName: '' });
+        setItemDialogOpen(true);
     };
 
     const handleDialogOpen = () => setDialogOpen(true);
@@ -53,22 +61,6 @@ const Dashboard = () => {
         setSelectedProject(project);
     };
 
-    const handleAddItem = async (itemData) => {
-        // Check if store exists, create it if it doesn't
-        let store = stores.find(store => store.name === itemData.storeName);
-        if (!store) {
-            store = await createStore({ name: itemData.storeName });
-        }
-        try {
-            // Create the item
-            const item = await createItem({ ...itemData, store: store.id });
-            // Refresh the items list
-            await getItems();
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
     return (
         <>
             <Box sx={{ display: 'flex' }}>
@@ -100,7 +92,14 @@ const Dashboard = () => {
                 >
                     {currentProject ? (
                         <Paper>
-                            <Typography variant="h5">{currentProject.name}</Typography>
+                            <Typography variant="h5">{currentProject.name}
+                                <Button
+                                    onClick={handleAddItem}
+                                    sx={{ marginLeft: 2 }}
+                                >
+                                    +
+                                </Button>
+                            </Typography>
                             <Typography variant="body1">{currentProject.description}</Typography>
                             {/* Add more project details or functionalities here */}
                         </Paper>
@@ -108,27 +107,38 @@ const Dashboard = () => {
                         <Typography variant="h6">Select a project to view details</Typography>
                     )}
 
-                    {selectedProject ? (
-                        <Paper>
-                            {/* Display selected project details here */}
-                        </Paper>
-                    ) : (
-                        <Typography variant="h6">Select a project to view details</Typography>
-                    )}
                 </Box>
             </Box>
 
-            <GenericDialog
-                open={dialogOpen}
-                handleClose={handleDialogClose}
-                title="Add New Project"
-                fields={[
-                    { id: 'name', name: 'name', label: 'Name', type: 'text', value: currentFormData.name },
-                    { id: 'description', name: 'description', label: 'Description', type: 'text', value: currentFormData.description }
-                ]}
-                handleSubmit={handleFormSubmit}
-                handleChange={handleFormChange}
-            />
+            {dialogContext === 'project' && (
+                <GenericDialog
+                    open={dialogOpen}
+                    handleClose={handleDialogClose}
+                    title="Add New Project"
+                    fields={[
+                        { id: 'name', name: 'name', label: 'Name', type: 'text', value: currentFormData.name },
+                        { id: 'description', name: 'description', label: 'Description', type: 'text', value: currentFormData.description }
+                    ]}
+                    handleSubmit={handleProjectFormSubmit}
+                    handleChange={handleFormChange}
+                />
+            )}
+
+            {itemDialogOpen && (
+                <GenericDialog
+                    open={itemDialogOpen}
+                    handleClose={handleItemDialogClose}
+                    title="Add New Item"
+                    fields={[
+                        { id: 'name', name: 'name', label: 'Name', type: 'text', value: newItemFormData.name },
+                        { id: 'description', name: 'description', label: 'Description', type: 'text', value: newItemFormData.description },
+                        { id: 'storeName', name: 'storeName', label: 'Store', type: 'select', value: newItemFormData.storeName }
+                    ]}
+                    handleSubmit={handleItemFormSubmit}
+                    handleChange={(e) => setNewItemFormData({ ...newItemFormData, [e.target.name]: e.target.value })}
+                    selectOptions={{ storeName: stores.map((store) => ({ value: store.id, label: store.name })) }}
+                />
+            )}
 
         </>
     );
