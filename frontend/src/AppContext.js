@@ -54,7 +54,7 @@ export const AppProvider = ({ children }) => {
         }
     }, []);
 
-    const getStores = async () => {
+    const getStores = useCallback(async () => {
         try {
             const fetchedStores = await fetchStores();
             setStores(fetchedStores);
@@ -62,7 +62,7 @@ export const AppProvider = ({ children }) => {
             console.error('Error fetching stores:', error);
             throw error;
         }
-    };
+    }, []);
 
     const addStore = async (storeData) => {
         try {

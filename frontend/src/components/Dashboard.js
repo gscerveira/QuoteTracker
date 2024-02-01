@@ -149,8 +149,11 @@ const Dashboard = () => {
                     fields={[
                         { id: 'name', name: 'name', label: 'Name', type: 'text', value: newItemFormData.name },
                         { id: 'description', name: 'description', label: 'Description', type: 'text', value: newItemFormData.description },
-                        { id: 'storeName', name: 'storeName', label: 'Store', type: 'select', value: newItemFormData.storeName }
+                        { id: 'storeName', name: 'storeName', label: 'Store', type: 'autocomplete', value: newItemFormData.storeName }
                     ]}
+                    autocompleteOptions={{
+                        storeName: stores.map((store) => ({label: store.name}))
+                    }}
                     handleSubmit={handleItemFormSubmit}
                     handleChange={(e) => setNewItemFormData({ ...newItemFormData, [e.target.name]: e.target.value })}
                     selectOptions={{ storeName: stores.map((store) => ({ value: store.id, label: store.name })) }}
