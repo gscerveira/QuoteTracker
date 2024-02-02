@@ -26,18 +26,27 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    // Check if store exists, create it if it doesn't
+    const findOrCreateStore = async (storeName) => {
+        let store = stores.find(store => store.name === storeName);
+        if (!store) {
+            const newStore = await createStore({ name: storeName });
+            setStores(prevStores => [...prevStores, newStore]);
+            store = newStore; // Set store to the newly created store
+        }
+        return store; // Return either the existing store or the newly created store
+    };
+
     const createAndAddItem = async (itemData, currentProjectId) => {
         try {
-            // Check if store exists, create it if it doesn't
-            const store = stores.find(store => store.name === itemData.storeName);
-            if (!store) {
-                const newStore = await createStore({ name: itemData.storeName });
-                setStores(prevStores => [...prevStores, newStore]); // Add new store to stores state
+            const store = await findOrCreateStore(itemData.storeName);
+            if (store && store.id) {
+                const newItem = await createItem({ ...itemData, store: store.id, project: currentProjectId });
+                setItems(prevItems => [...prevItems, newItem]);
+            } else { 
+                console.error('Error creating item');
+                // Appropriate handling of error will be added here
             }
-
-            // Create item
-            const newItem = await createItem({ ...itemData, store: store.id, project: currentProjectId });
-            setItems(prevItems => [...prevItems, newItem]); // Add new item to items state
         } catch (error) {
             console.error('Error creating item:', error);
             // Appropriate handling of error will be added here
