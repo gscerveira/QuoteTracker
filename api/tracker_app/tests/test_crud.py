@@ -154,13 +154,14 @@ def test_item_list(api_client, test_user, test_item):
 
 # Create
 @pytest.mark.django_db
-def test_item_create(api_client, test_user, test_project):
+def test_item_create(api_client, test_user, test_project, test_store):
     api_client.force_authenticate(user=test_user)
     url = reverse("items-list")
     data = {
         "project": test_project.id,
         "name": "New Item",
         "description": "Item Description",
+        "store": test_store.id,
     }
     response = api_client.post(url, data)
     assert response.status_code == status.HTTP_201_CREATED
