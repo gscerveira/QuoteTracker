@@ -82,7 +82,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ["id", "project", "name", "status", "description"]
+        fields = ["id", "project", "name", "status", "store", "description"]
 
 
 class StoreSerializer(serializers.ModelSerializer):
