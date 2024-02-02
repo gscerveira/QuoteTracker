@@ -54,15 +54,15 @@ def test_project(test_user):
 
 
 @pytest.fixture
-def test_item(test_project):
-    return Item.objects.create(
-        project=test_project, name="Test Item", description="Item Description"
-    )
+def test_store(test_user):
+    return Store.objects.create(user=test_user, name="Test Store")
 
 
 @pytest.fixture
-def test_store(test_user):
-    return Store.objects.create(user=test_user, name="Test Store")
+def test_item(test_project, test_store):
+    return Item.objects.create(
+        project=test_project, name="Test Item", description="Item Description", store=test_store
+    )
 
 
 # Project Tests
