@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography } from '@mui/material';
 import { fetchProjects, createProject } from '../services/apiService';
+import { reorder, move } from '../utils/dragAndDropHelpers';
 import { AppContext } from '../AppContext';
 import GenericDialog from './GenericDialog';
 import KanbanBoard from './KanbanBoard';
@@ -17,6 +18,13 @@ const Dashboard = () => {
     const [currentFormData, setCurrentFormData] = useState({ name: '', description: '' });
     const [newItemFormData, setNewItemFormData] = useState({ name: '', description: '', storeName: '' });
     const [dialogContext, setDialogContext] = useState(null); // ['project', 'item']
+    const [columns, setColumns] = useState({
+        need_to_send: [],
+        sent: [],
+        received: [],
+        need_to_resend: [],
+        done: [],
+    });
 
     const handleAddProject = () => {
         setDialogContext('project');
@@ -69,15 +77,45 @@ const Dashboard = () => {
     const handleDragEnd = async (result) => {
         const { destination, source, draggableId } = result;
 
-        if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
+        if (!destination) {
             return;
         }
 
-        const itemToUpdate = items.find(item => item.id === draggableId);
-        if (itemToUpdate) {
-            const updatedItemData = { ...itemToUpdate, status: destination.droppableId };
-            await (updateItemInContext(draggableId, updatedItemData));
-        }
+        const startStatus = source.droppableId;
+        const endStatus = destination.droppableId;
+
+        // If the item is dropped in the same column
+        if (startStatus === endStatus) {
+            const newItems = reorder(
+                columns[startStatus],
+                source.index,
+                destination.index
+            );
+            updateColumnItems(startStatus, newItems);
+        } else {
+            // If the item is dropped in a different column
+            const result = move(
+                columns[startStatus],
+                columns[endStatus],
+                source,
+                destination
+            );
+
+            const updatedItemData = { status: endStatus };
+            try {
+                const updatedItem = await updateItemInContext(draggableId, updatedItemData);
+                console.log("Item updated successfully:", updatedItem);
+            } catch (error) {
+                console.error('Failed to update item:', error);
+            }
+        };
+    };
+
+    const updateColumnItems = (status, newItems) => {
+        setColumns(prevColumns => ({
+            ...prevColumns,
+            [status]: newItems,
+        }));
     };
 
     useEffect(() => {
