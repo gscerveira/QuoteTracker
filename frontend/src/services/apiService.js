@@ -74,6 +74,19 @@ const createItem = async (itemData) => {
     }
 };
 
+const updateItem = async (itemId, itemData) => {
+    try {
+        const response = await axios.patch(API_URL + `items/${itemId}/`, itemData, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating item:', error);
+        throw error;
+    }
+};
+
 const fetchQuoteRequests = async (itemId) => {
     try {
         const response = await axios.get(API_URL + 'quoterequests/?item=', itemId, { withCredentials: true });
@@ -117,4 +130,4 @@ const createStore = async (storeData) => {
     }
 };
 
-export { register, login, fetchProjects, createProject, fetchItems, createItem, fetchQuoteRequests, createQuoteRequest, fetchStores, createStore };
+export { register, login, fetchProjects, createProject, fetchItems, createItem, updateItem, fetchQuoteRequests, createQuoteRequest, fetchStores, createStore };

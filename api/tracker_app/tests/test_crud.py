@@ -174,12 +174,13 @@ def test_item_create(api_client, test_user, test_project, test_store):
 def test_item_update(api_client, test_user, test_item):
     api_client.force_authenticate(user=test_user)
     url = reverse("items-detail", args=[test_item.id])
-    data = {"name": "Updated Item", "description": "Updated Item Description"}
+    data = {"name": "Updated Item", "description": "Updated Item Description", "status": "sent"}
     response = api_client.patch(url, data)
     assert response.status_code == status.HTTP_200_OK
     assert Item.objects.count() == 1
     assert Item.objects.last().name == "Updated Item"
     assert Item.objects.last().description == "Updated Item Description"
+    assert Item.objects.last().status == "sent"
 
 
 # Unauthorized Update

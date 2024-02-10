@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback } from 'react';
-import { createProject, fetchProjects, fetchStores, createStore, fetchItems, createItem } from './services/apiService';
+import { createProject, fetchProjects, fetchStores, createStore, fetchItems, createItem, updateItem } from './services/apiService';
 
 export const AppContext = createContext();
 
@@ -103,10 +103,20 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    const updateItemInContext = async (itemId, updatedItemData) => {
+        try {
+            const updatedItem = await updateItem(itemId, updatedItemData);
+            setItems(prevItems => prevItems.map(item => item.id === itemId ? updatedItem : item));
+        } catch (error) {
+            console.error('Error updating item:', error);
+            throw error;
+        }
+    };
+
     return (
         <AppContext.Provider value={{
             projects, stores, items, currentProject, addProject, createAndAddProject,
-            getProjects, getStores, addStore, getItems, addItem, createAndAddItem
+            getProjects, getStores, addStore, getItems, addItem, createAndAddItem, updateItemInContext
         }}>
             {children}
         </AppContext.Provider>
