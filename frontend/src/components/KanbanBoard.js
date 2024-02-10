@@ -5,10 +5,10 @@ import { Grid, Typography, Paper, Card, CardContent } from '@mui/material';
 // Item organization helper function
 const organizeItemByStatus = (items) => {
     const columns = {
-        needToSend: [],
+        need_to_send: [],
         sent: [],
         received: [],
-        needToResend: [],
+        need_to_resend: [],
         done: [],
     };
 
