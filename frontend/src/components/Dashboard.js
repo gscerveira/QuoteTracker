@@ -136,7 +136,7 @@ const Dashboard = () => {
                                 <Typography variant="body1">{currentProject.description}</Typography>
                                 {/* Add more project details or functionalities here */}
                             </Paper>
-                            <KanbanBoard items={items.filter(item => item.project === currentProject.id)} onDragEnd={handleDragEnd} />
+                            <KanbanBoard items={items.filter(item => item.project === currentProject.id)} handleDragEnd={handleDragEnd} />
                         </>
                     ) : (
                         <Typography variant="h6" sx={{ textAlign: 'center' }}>Select a project to view details</Typography>
