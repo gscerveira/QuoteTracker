@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback } from 'react';
-import { createProject, fetchProjects, fetchStores, createStore, fetchItems, createItem } from './services/apiService';
+import { createProject, fetchProjects, fetchStores, createStore, fetchItems, createItem, updateItem } from './services/apiService';
 
 export const AppContext = createContext();
 

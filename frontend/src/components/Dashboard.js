@@ -3,11 +3,12 @@ import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography } 
 import { fetchProjects, createProject } from '../services/apiService';
 import { AppContext } from '../AppContext';
 import GenericDialog from './GenericDialog';
+import KanbanBoard from './KanbanBoard';
 
 const drawerWidth = 240;
 
 const Dashboard = () => {
-    const { projects, currentProject, createAndAddProject, createAndAddItem, updateItemInContext, getProjects, getStores, createStore, getItems, createItem, stores } = useContext(AppContext);
+    const { projects, currentProject, createAndAddProject, createAndAddItem, updateItemInContext, getProjects, getStores, createStore, getItems, createItem, stores, items } = useContext(AppContext);
 
     const [selectedProject, setSelectedProject] = useState(null);
 
@@ -62,7 +63,7 @@ const Dashboard = () => {
             // Appropriate handling of error will be added here
         }
 
-        
+
     };
 
     const handleDragEnd = async (result) => {
@@ -74,7 +75,7 @@ const Dashboard = () => {
 
         const itemToUpdate = items.find(item => item.id === draggableId);
         if (itemToUpdate) {
-            const updatedItemData = {...itemToUpdate, status: destination.droppableId};
+            const updatedItemData = { ...itemToUpdate, status: destination.droppableId };
             await (updateItemInContext(draggableId, updatedItemData));
         }
     };
@@ -122,20 +123,23 @@ const Dashboard = () => {
                     sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
                 >
                     {currentProject ? (
-                        <Paper>
-                            <Typography variant="h5">{currentProject.name}
-                                <Button
-                                    onClick={handleAddItem}
-                                    sx={{ marginLeft: 2 }}
-                                >
-                                    +
-                                </Button>
-                            </Typography>
-                            <Typography variant="body1">{currentProject.description}</Typography>
-                            {/* Add more project details or functionalities here */}
-                        </Paper>
+                        <>
+                            <Paper>
+                                <Typography variant="h5">{currentProject.name}
+                                    <Button
+                                        onClick={handleAddItem}
+                                        sx={{ marginLeft: 2 }}
+                                    >
+                                        +
+                                    </Button>
+                                </Typography>
+                                <Typography variant="body1">{currentProject.description}</Typography>
+                                {/* Add more project details or functionalities here */}
+                            </Paper>
+                            <KanbanBoard items={items.filter(item => item.project === currentProject.id)} onDragEnd={handleDragEnd} />
+                        </>
                     ) : (
-                        <Typography variant="h6">Select a project to view details</Typography>
+                        <Typography variant="h6" sx={{ textAlign: 'center' }}>Select a project to view details</Typography>
                     )}
 
                 </Box>
@@ -166,7 +170,7 @@ const Dashboard = () => {
                         { id: 'storeName', name: 'storeName', label: 'Store', type: 'autocomplete', value: newItemFormData.storeName }
                     ]}
                     autocompleteOptions={{
-                        storeName: stores.map((store) => ({label: store.name}))
+                        storeName: stores.map((store) => ({ label: store.name }))
                     }}
                     handleSubmit={handleItemFormSubmit}
                     handleChange={(e) => setNewItemFormData({ ...newItemFormData, [e.target.name]: e.target.value })}

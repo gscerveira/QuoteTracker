@@ -21,7 +21,7 @@ const organizeItemByStatus = (items) => {
     return columns;
 };
 
-const KanbanBoard = ({ items, onDragEnd }) => {
+const KanbanBoard = ({ items, handleDragEnd }) => {
     const columns = organizeItemByStatus(items);
 
     return (
