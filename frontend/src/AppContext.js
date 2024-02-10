@@ -103,6 +103,16 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    const updateItemInContext = async (itemId, updatedItemData) => {
+        try {
+            const updatedItem = await updateItem(itemId, updatedItemData);
+            setItems(prevItems => prevItems.map(item => item.id === itemId ? updatedItem : item));
+        } catch (error) {
+            console.error('Error updating item:', error);
+            throw error;
+        }
+    };
+
     return (
         <AppContext.Provider value={{
             projects, stores, items, currentProject, addProject, createAndAddProject,

@@ -25,7 +25,7 @@ const KanbanBoard = ({ items, onDragEnd }) => {
     const columns = organizeItemByStatus(items);
 
     return (
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext onDragEnd={handleDragEnd}>
             <Grid container spacing={2}>
                 {Object.entries(columns).map(([status, items], index) => (
                     <Droppable droppableId={status} key={status}>
