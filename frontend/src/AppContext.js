@@ -116,7 +116,7 @@ export const AppProvider = ({ children }) => {
     return (
         <AppContext.Provider value={{
             projects, stores, items, currentProject, addProject, createAndAddProject,
-            getProjects, getStores, addStore, getItems, addItem, createAndAddItem
+            getProjects, getStores, addStore, getItems, addItem, createAndAddItem, updateItemInContext
         }}>
             {children}
         </AppContext.Provider>

@@ -7,7 +7,7 @@ import GenericDialog from './GenericDialog';
 const drawerWidth = 240;
 
 const Dashboard = () => {
-    const { projects, currentProject, createAndAddProject, createAndAddItem, getProjects, getStores, createStore, getItems, createItem, stores } = useContext(AppContext);
+    const { projects, currentProject, createAndAddProject, createAndAddItem, updateItemInContext, getProjects, getStores, createStore, getItems, createItem, stores } = useContext(AppContext);
 
     const [selectedProject, setSelectedProject] = useState(null);
 
@@ -63,7 +63,21 @@ const Dashboard = () => {
         }
 
         
-    }
+    };
+
+    const handleDragEnd = async (result) => {
+        const { destination, source, draggableId } = result;
+
+        if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
+            return;
+        }
+
+        const itemToUpdate = items.find(item => item.id === draggableId);
+        if (itemToUpdate) {
+            const updatedItemData = {...itemToUpdate, status: destination.droppableId};
+            await (updateItemInContext(draggableId, updatedItemData));
+        }
+    };
 
     useEffect(() => {
         // Fetch projects when component mounts
