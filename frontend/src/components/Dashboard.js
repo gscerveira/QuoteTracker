@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography, AppBar, Toolbar } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { fetchProjects, createProject } from '../services/apiService';
 import { reorder, move } from '../utils/dragAndDropHelpers';
 import { AppContext } from '../AppContext';
@@ -10,19 +9,10 @@ import KanbanBoard from './KanbanBoard';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
-    appBar: {
-        marginBottom: theme.spacing(2),
-    },
-    logoutButton: {
-        marginLeft: 'auto',
-    },
-}));
 
 const Dashboard = () => {
     const { projects, currentProject, setCurrentProject, createAndAddProject, createAndAddItem, updateItemInContext, getProjects, getStores, createStore, getItems, createItem, stores, items } = useContext(AppContext);
 
-    const classes = useStyles();
     const handleLogout = useLogout();
 
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -149,11 +139,11 @@ const Dashboard = () => {
 
     return (
         <>
-            <AppBar position="static" className={classes.appBar}>
+            <AppBar position="static" sx={{ mb: 2 }}>
                 <Toolbar>
                     <Button
                         color="inherit"
-                        className={classes.logoutButton}
+                        sx={{ ml: 'auto' }}
                         onClick={handleLogout}
                     >
                         Logout
@@ -177,7 +167,6 @@ const Dashboard = () => {
                         {projects.map((project) => (
                             <ListItem button key={project.id} onClick={() => handleProjectClick(project)}>
                                 <ListItemText primary={project.name} />
-                                <Button onClick={handleItemDialogOpen}>Add Item</Button>
                             </ListItem>
                         ))}
                     </List>
