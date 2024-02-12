@@ -26,6 +26,19 @@ const login = (username, password) => {
     });
 };
 
+// Logout
+const logout = async () => {
+    try {
+        await axios.post(API_URL + 'logout/', {}, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
+    } catch (error) {
+        console.error('Error logging out:', error);
+        throw error;
+    }
+};
+
 const fetchProjects = async () => {
     try {
         const response = await axios.get(API_URL + 'projects/', {
@@ -143,4 +156,4 @@ const createStore = async (storeData) => {
     }
 };
 
-export { register, login, fetchProjects, createProject, fetchItems, createItem, updateItem, fetchQuoteRequests, createQuoteRequest, fetchStores, fetchStore, createStore };
+export { register, login, logout, fetchProjects, createProject, fetchItems, createItem, updateItem, fetchQuoteRequests, createQuoteRequest, fetchStores, fetchStore, createStore };
