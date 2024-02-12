@@ -77,7 +77,7 @@ const Dashboard = () => {
     const handleDragEnd = async (result) => {
         const { destination, source, draggableId } = result;
 
-        if (!destination) {
+        if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
             return;
         }
 
@@ -100,16 +100,20 @@ const Dashboard = () => {
                 source,
                 destination
             );
+            updateColumnItems(startStatus, result[startStatus]);
+            updateColumnItems(endStatus, result[endStatus]);
+        }
 
+        try {
             const updatedItemData = { status: endStatus };
-            try {
-                const updatedItem = await updateItemInContext(draggableId, updatedItemData);
-                console.log("Item updated successfully:", updatedItem);
-            } catch (error) {
-                console.error('Failed to update item:', error);
-            }
-        };
+            await updateItemInContext(draggableId, updatedItemData);
+            console.log("Item updated successfully");
+        } catch (error) {
+            console.error('Failed to update item:', error);
+        }
     };
+
+
 
     const updateColumnItems = (status, newItems) => {
         setColumns(prevColumns => ({

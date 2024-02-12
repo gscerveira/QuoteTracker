@@ -47,7 +47,6 @@ const KanbanBoard = ({ items, handleDragEnd }) => {
                                         <Draggable key={item.id} draggableId={String(item.id)} index={index}>
                                             {(provided) => (
                                                 <Card
-                                                    {...console.log(provided.innerRef)}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
