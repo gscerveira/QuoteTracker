@@ -50,7 +50,7 @@ const KanbanBoard = ({ items, handleDragEnd }) => {
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    style={{ margin: 8 }}>
+                                                    style={{ margin: 8, ...provided.draggableProps.style }}>
                                                     <CardContent>
                                                         <Typography>{item.name}</Typography>
                                                         <Typography color="textSecondary" gutterBottom>
