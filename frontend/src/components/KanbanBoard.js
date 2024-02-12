@@ -5,10 +5,10 @@ import { Grid, Typography, Paper, Card, CardContent } from '@mui/material';
 // Item organization helper function
 const organizeItemByStatus = (items) => {
     const columns = {
-        needToSend: [],
+        need_to_send: [],
         sent: [],
         received: [],
-        needToResend: [],
+        need_to_resend: [],
         done: [],
     };
 
@@ -19,6 +19,14 @@ const organizeItemByStatus = (items) => {
     });
 
     return columns;
+};
+
+const statusLabels = {
+    need_to_send: 'Need to Send',
+    sent: 'Sent',
+    received: 'Received',
+    need_to_resend: 'Need to Resend',
+    done: 'Done',
 };
 
 const KanbanBoard = ({ items, handleDragEnd }) => {
@@ -33,7 +41,7 @@ const KanbanBoard = ({ items, handleDragEnd }) => {
                             <Grid item xs={12} sm={6} md={4} lg={2.4}>
                                 <Paper ref={provided.innerRef} {...provided.droppableProps} style={{ minHeight: 500 }}>
                                     <Typography variant="h6" style={{ padding: '16px 0', textAlign: 'center' }}>
-                                        {status.replace('_', ' ')}
+                                        {statusLabels[status]}
                                     </Typography>
                                     {items.map((item, index) => (
                                         <Draggable key={item.id} draggableId={String(item.id)} index={index}>
@@ -42,7 +50,7 @@ const KanbanBoard = ({ items, handleDragEnd }) => {
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    style={{ margin: 8 }}>
+                                                    style={{ margin: 8, ...provided.draggableProps.style }}>
                                                     <CardContent>
                                                         <Typography>{item.name}</Typography>
                                                         <Typography color="textSecondary" gutterBottom>

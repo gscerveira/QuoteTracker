@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography } from '@mui/material';
 import { fetchProjects, createProject } from '../services/apiService';
+import { reorder, move } from '../utils/dragAndDropHelpers';
 import { AppContext } from '../AppContext';
 import GenericDialog from './GenericDialog';
 import KanbanBoard from './KanbanBoard';
@@ -17,6 +18,13 @@ const Dashboard = () => {
     const [currentFormData, setCurrentFormData] = useState({ name: '', description: '' });
     const [newItemFormData, setNewItemFormData] = useState({ name: '', description: '', storeName: '' });
     const [dialogContext, setDialogContext] = useState(null); // ['project', 'item']
+    const [columns, setColumns] = useState({
+        need_to_send: [],
+        sent: [],
+        received: [],
+        need_to_resend: [],
+        done: [],
+    });
 
     const handleAddProject = () => {
         setDialogContext('project');
@@ -73,11 +81,45 @@ const Dashboard = () => {
             return;
         }
 
-        const itemToUpdate = items.find(item => item.id === draggableId);
-        if (itemToUpdate) {
-            const updatedItemData = { ...itemToUpdate, status: destination.droppableId };
-            await (updateItemInContext(draggableId, updatedItemData));
+        const startStatus = source.droppableId;
+        const endStatus = destination.droppableId;
+
+        // If the item is dropped in the same column
+        if (startStatus === endStatus) {
+            const newItems = reorder(
+                columns[startStatus],
+                source.index,
+                destination.index
+            );
+            updateColumnItems(startStatus, newItems);
+        } else {
+            // If the item is dropped in a different column
+            const result = move(
+                columns[startStatus],
+                columns[endStatus],
+                source,
+                destination
+            );
+            updateColumnItems(startStatus, result[startStatus]);
+            updateColumnItems(endStatus, result[endStatus]);
         }
+
+        try {
+            const updatedItemData = { status: endStatus };
+            await updateItemInContext(draggableId, updatedItemData);
+            console.log("Item updated successfully");
+        } catch (error) {
+            console.error('Failed to update item:', error);
+        }
+    };
+
+
+
+    const updateColumnItems = (status, newItems) => {
+        setColumns(prevColumns => ({
+            ...prevColumns,
+            [status]: newItems,
+        }));
     };
 
     useEffect(() => {
@@ -136,7 +178,7 @@ const Dashboard = () => {
                                 <Typography variant="body1">{currentProject.description}</Typography>
                                 {/* Add more project details or functionalities here */}
                             </Paper>
-                            <KanbanBoard items={items.filter(item => item.project === currentProject.id)} onDragEnd={handleDragEnd} />
+                            <KanbanBoard items={items.filter(item => item.project === currentProject.id)} handleDragEnd={handleDragEnd} />
                         </>
                     ) : (
                         <Typography variant="h6" sx={{ textAlign: 'center' }}>Select a project to view details</Typography>
