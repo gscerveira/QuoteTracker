@@ -26,6 +26,19 @@ const login = (username, password) => {
     });
 };
 
+// Logout
+const logout = async () => {
+    try {
+        await axios.post(API_URL + 'logout/', {}, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
+    } catch (error) {
+        console.error('Error logging out:', error);
+        throw error;
+    }
+};
+
 const fetchProjects = async () => {
     try {
         const response = await axios.get(API_URL + 'projects/', {
@@ -107,12 +120,25 @@ const createQuoteRequest = async (quoteRequestData) => {
     }
 };
 
+
+// Get all store
 const fetchStores = async () => {
     try {
         const response = await axios.get(API_URL + 'stores/', { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('Error fetching stores:', error);
+        throw error;
+    }
+};
+
+// Get store by id
+const fetchStore = async (storeId) => {
+    try {
+        const response = await axios.get(API_URL + `stores/${storeId}/`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching store:', error);
         throw error;
     }
 };
@@ -130,4 +156,4 @@ const createStore = async (storeData) => {
     }
 };
 
-export { register, login, fetchProjects, createProject, fetchItems, createItem, updateItem, fetchQuoteRequests, createQuoteRequest, fetchStores, createStore };
+export { register, login, logout, fetchProjects, createProject, fetchItems, createItem, updateItem, fetchQuoteRequests, createQuoteRequest, fetchStores, fetchStore, createStore };

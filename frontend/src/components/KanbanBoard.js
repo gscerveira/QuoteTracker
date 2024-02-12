@@ -1,6 +1,9 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Grid, Typography, Paper, Card, CardContent } from '@mui/material';
+import { fetchStore } from '../services/apiService'
+import { useContext } from 'react';
+import { AppContext } from '../AppContext';
 
 // Item organization helper function
 const organizeItemByStatus = (items) => {
@@ -32,6 +35,13 @@ const statusLabels = {
 const KanbanBoard = ({ items, handleDragEnd }) => {
     const columns = organizeItemByStatus(items);
 
+    const { stores } = useContext(AppContext);
+
+    const getStoreName = (storeId) => {
+        const store = stores.find(store => store.id === storeId);
+        return store ? store.name : '';
+    };
+
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <Grid container spacing={2}>
@@ -54,7 +64,7 @@ const KanbanBoard = ({ items, handleDragEnd }) => {
                                                     <CardContent>
                                                         <Typography>{item.name}</Typography>
                                                         <Typography color="textSecondary" gutterBottom>
-                                                            {item.storeName}
+                                                            {getStoreName(item.store)}
                                                         </Typography>
                                                     </CardContent>
                                                 </Card>

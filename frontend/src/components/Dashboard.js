@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography } from '@mui/material';
+import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography, AppBar, Toolbar } from '@mui/material';
 import { fetchProjects, createProject } from '../services/apiService';
 import { reorder, move } from '../utils/dragAndDropHelpers';
 import { AppContext } from '../AppContext';
+import { useLogout } from '../utils/authHelpers';
 import GenericDialog from './GenericDialog';
 import KanbanBoard from './KanbanBoard';
 
 const drawerWidth = 240;
 
-const Dashboard = () => {
-    const { projects, currentProject, createAndAddProject, createAndAddItem, updateItemInContext, getProjects, getStores, createStore, getItems, createItem, stores, items } = useContext(AppContext);
 
-    const [selectedProject, setSelectedProject] = useState(null);
+const Dashboard = () => {
+    const { projects, currentProject, setCurrentProject, createAndAddProject, createAndAddItem, updateItemInContext, getProjects, getStores, createStore, getItems, createItem, stores, items } = useContext(AppContext);
+
+    const handleLogout = useLogout();
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [itemDialogOpen, setItemDialogOpen] = useState(false);
@@ -132,11 +134,22 @@ const Dashboard = () => {
     }, [getStores]);
 
     const handleProjectClick = (project) => {
-        setSelectedProject(project);
+        setCurrentProject(project);
     };
 
     return (
         <>
+            <AppBar position="static" sx={{ mb: 2 }}>
+                <Toolbar>
+                    <Button
+                        color="inherit"
+                        sx={{ ml: 'auto' }}
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </Button>
+                </Toolbar>
+            </AppBar>
             <Box sx={{ display: 'flex' }}>
                 <Drawer
                     sx={{
@@ -154,7 +167,6 @@ const Dashboard = () => {
                         {projects.map((project) => (
                             <ListItem button key={project.id} onClick={() => handleProjectClick(project)}>
                                 <ListItemText primary={project.name} />
-                                <Button onClick={handleItemDialogOpen}>Add Item</Button>
                             </ListItem>
                         ))}
                     </List>
