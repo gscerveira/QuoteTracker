@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography, AppBar, Toolbar } from '@mui/material';
-import { fetchProjects, createProject } from '../services/apiService';
+import { Box, Drawer, List, ListItem, ListItemText, Button, Paper, Typography, AppBar, Toolbar, Menu } from '@mui/material';
+import MenuOptions from './MenuOptions';
 import { reorder, move } from '../utils/dragAndDropHelpers';
 import { AppContext } from '../AppContext';
 import { useLogout } from '../utils/authHelpers';
@@ -165,7 +165,17 @@ const Dashboard = () => {
                 >
                     <List>
                         {projects.map((project) => (
-                            <ListItem button key={project.id} onClick={() => handleProjectClick(project)}>
+                            <ListItem
+                                button
+                                key={project.id}
+                                onClick={() => handleProjectClick(project)}
+                                secondaryAction={
+                                    <MenuOptions
+                                        onEdit={() => openProjectEditDialog(project)}
+                                        onDelete={() => confirmProjectDeletion(project.id)}
+                                    />
+                                }
+                            >
                                 <ListItemText primary={project.name} />
                             </ListItem>
                         ))}

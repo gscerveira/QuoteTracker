@@ -64,6 +64,32 @@ const createProject = async (projectData) => {
     }
 };
 
+const updateProject = async (projectId, projectData) => {
+    try {
+        const response = await axios.patch(API_URL + `projects/${projectId}/`, projectData, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating project:', error);
+        throw error;
+    }
+};
+
+const deleteProject = async (projectId) => {
+    try {
+        const response = await axios.delete(API_URL + `projects/${projectId}/`, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting project:', error);
+        throw error;
+    }
+};
+
 const fetchItems = async (projectId) => {
     try {
         const response = await axios.get(API_URL + 'items/?project=', projectId, { withCredentials: true });
@@ -100,28 +126,21 @@ const updateItem = async (itemId, itemData) => {
     }
 };
 
-const fetchQuoteRequests = async (itemId) => {
+const deleteItem = async (itemId) => {
     try {
-        const response = await axios.get(API_URL + 'quoterequests/?item=', itemId, { withCredentials: true });
+        const response = await axios.delete(API_URL + `items/${itemId}/`, {
+            headers: { 'X-CSRFToken': getCsrfToken() },
+            withCredentials: true
+        });
         return response.data;
     } catch (error) {
-        console.error('Error fetching quote requests:', error);
-        throw error;
-    }
-};
-
-const createQuoteRequest = async (quoteRequestData) => {
-    try {
-        const response = await axios.post(API_URL + 'quoterequests/', quoteRequestData, { withCredentials: true });
-        return response.data;
-    } catch (error) {
-        console.error('Error creating quote request:', error);
+        console.error('Error deleting item:', error);
         throw error;
     }
 };
 
 
-// Get all store
+// Get all stores
 const fetchStores = async () => {
     try {
         const response = await axios.get(API_URL + 'stores/', { withCredentials: true });
@@ -156,4 +175,4 @@ const createStore = async (storeData) => {
     }
 };
 
-export { register, login, logout, fetchProjects, createProject, fetchItems, createItem, updateItem, fetchQuoteRequests, createQuoteRequest, fetchStores, fetchStore, createStore };
+export { register, login, logout, fetchProjects, createProject, fetchItems, createItem, updateItem, updateProject, deleteProject, deleteItem, fetchStores, fetchStore, createStore };
