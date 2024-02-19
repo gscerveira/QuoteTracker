@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
-import { MoreVertIcon } from '@mui/icons-material/MoreVert';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const MenuOptions = ({ onEdit, onDelete }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);

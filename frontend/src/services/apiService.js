@@ -175,4 +175,4 @@ const createStore = async (storeData) => {
     }
 };
 
-export { register, login, logout, fetchProjects, createProject, fetchItems, createItem, updateItem, updateProject, deleteProject, deleteItem, fetchQuoteRequests, createQuoteRequest, fetchStores, fetchStore, createStore };
+export { register, login, logout, fetchProjects, createProject, fetchItems, createItem, updateItem, updateProject, deleteProject, deleteItem, fetchStores, fetchStore, createStore };
