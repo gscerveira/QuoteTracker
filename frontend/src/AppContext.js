@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback } from 'react';
-import { createProject, fetchProjects, fetchStores, createStore, fetchItems, createItem, updateItem } from './services/apiService';
+import { createProject, fetchProjects, fetchStores, createStore, fetchItems, createItem, updateItem, deleteItem, updateProject } from './services/apiService';
 
 export const AppContext = createContext();
 
@@ -26,6 +26,16 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    const updateProjectInContext = async (projectId, projectData) => {
+        const updatedProject = await updateProject(projectId, projectData);
+        setProjects(prevProjects => prevProjects.map(project => project.id === projectId ? updatedProject : project));
+    };
+
+    const deleteProjectInContext = async (projectId) => {
+        await deleteProject(projectId);
+        setProjects(prevProjects => prevProjects.filter(project => project.id !== projectId));
+    };
+
     // Check if store exists, create it if it doesn't
     const findOrCreateStore = async (storeName) => {
         let store = stores.find(store => store.name === storeName);
@@ -43,7 +53,7 @@ export const AppProvider = ({ children }) => {
             if (store && store.id) {
                 const newItem = await createItem({ ...itemData, store: store.id, project: currentProjectId });
                 setItems(prevItems => [...prevItems, newItem]);
-            } else { 
+            } else {
                 console.error('Error creating item');
                 // Appropriate handling of error will be added here
             }
@@ -111,6 +121,11 @@ export const AppProvider = ({ children }) => {
             console.error('Error updating item:', error);
             throw error;
         }
+    };
+
+    const deleteItemInContext = async (itemId) => {
+        await deleteItem(itemId);
+        setItems(prevItems => prevItems.filter(item => item.id !== itemId));
     };
 
     return (

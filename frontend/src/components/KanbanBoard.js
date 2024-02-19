@@ -1,9 +1,10 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Grid, Typography, Paper, Card, CardContent } from '@mui/material';
+import { Grid, Typography, Paper, Card, CardContent, CardActions } from '@mui/material';
 import { fetchStore } from '../services/apiService'
 import { useContext } from 'react';
 import { AppContext } from '../AppContext';
+import MenuOptions from './MenuOptions';
 
 // Item organization helper function
 const organizeItemByStatus = (items) => {
@@ -67,6 +68,12 @@ const KanbanBoard = ({ items, handleDragEnd }) => {
                                                             {getStoreName(item.store)}
                                                         </Typography>
                                                     </CardContent>
+                                                    <CardActions disableSpacing>
+                                                        <MenuOptions
+                                                            onEdit={() => openItemEditDialog(item)}
+                                                            onDelete={() => confirmItemDeletion(item.id)}
+                                                        />
+                                                    </CardActions>
                                                 </Card>
                                             )}
                                         </Draggable>
