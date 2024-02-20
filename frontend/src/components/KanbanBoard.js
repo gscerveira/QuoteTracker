@@ -5,6 +5,7 @@ import { fetchStore } from '../services/apiService'
 import { useContext } from 'react';
 import { AppContext } from '../AppContext';
 import MenuOptions from './MenuOptions';
+import { PropaneSharp } from '@mui/icons-material';
 
 // Item organization helper function
 const organizeItemByStatus = (items) => {
@@ -33,7 +34,7 @@ const statusLabels = {
     done: 'Done',
 };
 
-const KanbanBoard = ({ items, handleDragEnd }) => {
+const KanbanBoard = ({ items, handleDragEnd, handleDeleteItem, handleEditItem }) => {
     const columns = organizeItemByStatus(items);
 
     const { stores } = useContext(AppContext);
@@ -70,8 +71,8 @@ const KanbanBoard = ({ items, handleDragEnd }) => {
                                                     </CardContent>
                                                     <CardActions disableSpacing>
                                                         <MenuOptions
-                                                            onEdit={() => openItemEditDialog(item)}
-                                                            onDelete={() => confirmItemDeletion(item.id)}
+                                                            onEdit={() => handleEditItem(item)}
+                                                            onDelete={() => handleDeleteItem(item.id)}
                                                         />
                                                     </CardActions>
                                                 </Card>
