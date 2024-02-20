@@ -96,6 +96,7 @@ class Item(models.Model):
         name (CharField): The name of the item.
         status (CharField): The status of the item.
         description (TextField): The description of the item.
+        store (ForeignKey): The store that the item is associated with.
     """
 
     NEED_SEND = "need_to_send"

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback } from 'react';
-import { createProject, fetchProjects, fetchStores, createStore, fetchItems, createItem, updateItem, deleteItem, updateProject } from './services/apiService';
+import { createProject, fetchProjects, fetchStores, createStore, fetchItems, createItem, updateItem, deleteItem, updateProject, deleteProject, fetchStore } from './services/apiService';
 
 export const AppContext = createContext();
 
@@ -83,6 +83,16 @@ export const AppProvider = ({ children }) => {
         }
     }, []);
 
+    const getStore = async (storeId) => {
+        try {
+            const store = fetchStore(storeId);
+            return store;
+        } catch (error) {
+            console.error('Error fetching store:', error);
+            throw error;
+        }
+    };
+
     const addStore = async (storeData) => {
         try {
             const newStore = await createStore(storeData);
@@ -130,8 +140,8 @@ export const AppProvider = ({ children }) => {
 
     return (
         <AppContext.Provider value={{
-            projects, stores, items, currentProject, setCurrentProject, addProject, createAndAddProject,
-            getProjects, getStores, addStore, getItems, addItem, createAndAddItem, updateItemInContext
+            projects, stores, items, currentProject, setCurrentProject, addProject, createAndAddProject, findOrCreateStore,
+            getProjects, getStores, addStore, getItems, addItem, createAndAddItem, updateItemInContext, deleteItemInContext, updateProjectInContext, deleteProjectInContext
         }}>
             {children}
         </AppContext.Provider>

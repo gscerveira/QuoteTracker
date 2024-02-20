@@ -11,7 +11,7 @@ const drawerWidth = 240;
 
 
 const Dashboard = () => {
-    const { projects, currentProject, setCurrentProject, createAndAddProject, createAndAddItem, updateItemInContext, getProjects, getStores, createStore, getItems, createItem, stores, items } = useContext(AppContext);
+    const { projects, currentProject, setCurrentProject, createAndAddProject, createAndAddItem, updateItemInContext, deleteItemInContext, getProjects, getStores, createStore, getItems, createItem, stores, items, deleteProjectInContext, updateProjectInContext, findOrCreateStore } = useContext(AppContext);
 
     const handleLogout = useLogout();
 
@@ -27,11 +27,45 @@ const Dashboard = () => {
         need_to_resend: [],
         done: [],
     });
+    const [editingProjectId, setEditingProjectId] = useState(null);
+    const [editingItemId, setEditingItemId] = useState(null);
 
     const handleAddProject = () => {
         setDialogContext('project');
         setCurrentFormData({ name: '', description: '' });
         handleDialogOpen();
+    };
+
+    const handleEditProject = (project) => {
+        setDialogContext('project');
+        setCurrentFormData({ name: project.name, description: project.description });
+        setEditingProjectId(project.id);
+        handleDialogOpen();
+    };
+
+    const handleEditItem = (item) => {
+        setDialogContext('item');
+        setNewItemFormData({ name: item.name, description: item.description, storeName: item.storeName });
+        setEditingItemId(item.id);
+        handleItemDialogOpen();
+    };
+
+    const handleDeleteItem = async (itemId) => {
+        const isConfirmed = window.confirm('Are you sure you want to delete this item?');
+        if (isConfirmed) {
+            await deleteItemInContext(itemId);
+        }
+    };
+
+    const handleDeleteProject = async (projectId) => {
+        const isConfirmed = window.confirm('Are you sure you want to delete this project?');
+        if (isConfirmed) {
+            await deleteProjectInContext(projectId);
+
+            if (currentProject && currentProject.id === projectId) {
+                setCurrentProject(null);
+            }
+        }
     };
 
     const handleAddItem = () => {
@@ -55,8 +89,15 @@ const Dashboard = () => {
             return;
         }
 
-        await createAndAddProject(currentFormData);
+        if (editingProjectId) {
+            await updateProjectInContext(editingProjectId, currentFormData);
+        }
+        else {
+            await createAndAddProject(currentFormData);
+        }
+
         handleDialogClose();
+        setEditingProjectId(null);
     };
 
     const handleItemFormSubmit = async () => {
@@ -66,14 +107,26 @@ const Dashboard = () => {
         }
 
         try {
-            await createAndAddItem(newItemFormData, currentProject.id);
+            const store = await findOrCreateStore(newItemFormData.storeName);
+            const storeId = store.id;
+
+            const itemDataWithStoreId = { ...newItemFormData, store: storeId };
+
+
+            delete itemDataWithStoreId.storeName;
+
+            if (editingItemId) {
+                await updateItemInContext(editingItemId, itemDataWithStoreId);
+            }
+            else {
+                await createAndAddItem(newItemFormData, currentProject.id);
+            }
+
             handleItemDialogClose();
+            setEditingItemId(null);
         } catch (error) {
             console.error('Error:', error);
-            // Appropriate handling of error will be added here
         }
-
-
     };
 
     const handleDragEnd = async (result) => {
@@ -171,8 +224,8 @@ const Dashboard = () => {
                                 onClick={() => handleProjectClick(project)}
                                 secondaryAction={
                                     <MenuOptions
-                                        onEdit={() => openProjectEditDialog(project)}
-                                        onDelete={() => confirmProjectDeletion(project.id)}
+                                        onEdit={() => handleEditProject(project)}
+                                        onDelete={() => handleDeleteProject(project.id)}
                                     />
                                 }
                             >
@@ -200,7 +253,8 @@ const Dashboard = () => {
                                 <Typography variant="body1">{currentProject.description}</Typography>
                                 {/* Add more project details or functionalities here */}
                             </Paper>
-                            <KanbanBoard items={items.filter(item => item.project === currentProject.id)} handleDragEnd={handleDragEnd} />
+                            <KanbanBoard items={items.filter(item => item.project === currentProject.id)} handleDragEnd={handleDragEnd}
+                                handleEditItem={handleEditItem} handleDeleteItem={handleDeleteItem} />
                         </>
                     ) : (
                         <Typography variant="h6" sx={{ textAlign: 'center' }}>Select a project to view details</Typography>
