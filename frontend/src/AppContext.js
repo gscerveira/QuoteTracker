@@ -125,6 +125,12 @@ export const AppProvider = ({ children }) => {
 
     const updateItemInContext = async (itemId, updatedItemData) => {
         try {
+            // If a store name is provided, find or create the store
+            if (updatedItemData.storeName) {
+                const store = await findOrCreateStore(updatedItemData.storeName);
+                updatedItemData.store = store.id;
+            }
+
             const updatedItem = await updateItem(itemId, updatedItemData);
             setItems(prevItems => prevItems.map(item => item.id === itemId ? updatedItem : item));
         } catch (error) {
@@ -141,7 +147,7 @@ export const AppProvider = ({ children }) => {
     return (
         <AppContext.Provider value={{
             projects, stores, items, currentProject, setCurrentProject, addProject, createAndAddProject, findOrCreateStore,
-            getProjects, getStores, addStore, getItems, addItem, createAndAddItem, updateItemInContext, deleteItemInContext, updateProjectInContext, deleteProjectInContext
+            getProjects, getStores, getStore, addStore, getItems, addItem, createAndAddItem, updateItemInContext, deleteItemInContext, updateProjectInContext, deleteProjectInContext
         }}>
             {children}
         </AppContext.Provider>

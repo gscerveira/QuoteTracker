@@ -11,7 +11,7 @@ const drawerWidth = 240;
 
 
 const Dashboard = () => {
-    const { projects, currentProject, setCurrentProject, createAndAddProject, createAndAddItem, updateItemInContext, deleteItemInContext, getProjects, getStores, createStore, getItems, createItem, stores, items, deleteProjectInContext, updateProjectInContext, findOrCreateStore } = useContext(AppContext);
+    const { projects, currentProject, setCurrentProject, createAndAddProject, createAndAddItem, updateItemInContext, deleteItemInContext, getProjects, getStores, createStore, getItems, getStore, createItem, stores, items, deleteProjectInContext, updateProjectInContext, findOrCreateStore } = useContext(AppContext);
 
     const handleLogout = useLogout();
 
@@ -107,16 +107,8 @@ const Dashboard = () => {
         }
 
         try {
-            const store = await findOrCreateStore(newItemFormData.storeName);
-            const storeId = store.id;
-
-            const itemDataWithStoreId = { ...newItemFormData, store: storeId };
-
-
-            delete itemDataWithStoreId.storeName;
-
             if (editingItemId) {
-                await updateItemInContext(editingItemId, itemDataWithStoreId);
+                await updateItemInContext(editingItemId, newItemFormData);
             }
             else {
                 await createAndAddItem(newItemFormData, currentProject.id);
