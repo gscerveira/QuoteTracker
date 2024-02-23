@@ -44,4 +44,4 @@ COPY . /quotes_tracker/
 EXPOSE 8000
 
 # Command to run the gunicorn server
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "quotes_tracker.wsgi:application"]
+CMD ["gunicorn", "quotes_tracker.wsgi:application", "--bind", "0.0.0.0:8000"]
