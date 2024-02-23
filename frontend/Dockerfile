@@ -16,12 +16,3 @@ WORKDIR /quotes_tracker/
 EXPOSE 3000
 # Start the development server
 CMD ["npm", "start"]
-
-# Production stage
-FROM nginx:alpine as prod
-WORKDIR /quotes_tracker/
-# Copy the built frontend from the builder stage into the nginx container
-COPY --from=builder /quotes_tracker/build /usr/share/nginx/html
-EXPOSE 80
-# Start the nginx server
-CMD ["nginx", "-g", "daemon off;"]
