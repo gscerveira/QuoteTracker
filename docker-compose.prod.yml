@@ -1,19 +1,10 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-  
   api:
     build:
       context: ./api
-      target: dev
+      target: prod
     environment:
       SECRET_KEY: ${SECRET_KEY}
       DB_NAME: ${DB_NAME}
@@ -21,7 +12,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
-      DJANGO_SETTINGS_MODULE: quotes_tracker.settings.dev
+      DJANGO_SETTINGS_MODULE: quotes_tracker.settings.prod
     volumes:
       - ./api:/quotes_tracker
     ports:
@@ -32,21 +23,18 @@ services:
   frontend:
     build:
       context: ./frontend
-      target: dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/quotes_tracker
+      target: builder
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - ./frontend:/quotes_tracker
 
   reverse_proxy:
     build:
       context: ./nginx
-      target: dev
+      target: prod
     ports:
       - 81:80
     depends_on:
       - api
-      - frontend
-    
-volumes:
-  postgres_data:
+#      - frontend
