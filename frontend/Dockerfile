@@ -3,6 +3,8 @@ FROM node:20-alpine as builder
 WORKDIR /quotes_tracker/
 # Copy package files for building
 COPY package*.json ./
+# Use http registry
+RUN npm config set registry http://registry.npmjs.org/
 # Install dependencies (clean install)
 RUN npm ci
 # Copy contents of frontend/ into the container
