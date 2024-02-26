@@ -35,7 +35,7 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 FROM base as prod
 
 # Install gunicorn and the compiled dependencies
-RUN python -m pip install gunicorn -r /quotes_tracker/requirements.txt
+RUN python -m pip install -r /quotes_tracker/requirements.txt
 
 # Copy the rest of your application's code into the container
 COPY . /quotes_tracker/
