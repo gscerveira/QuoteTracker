@@ -19,11 +19,13 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    restart: always
   
   frontend:
     build:
       context: ./frontend
       target: builder
+    restart: always
 #    ports:
 #      - "3000:3000"
 #    volumes:
@@ -38,3 +40,4 @@ services:
     depends_on:
       - api
 #      - frontend
+    restart: always
