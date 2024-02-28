@@ -32,7 +32,7 @@ CORS_EXPOSE_HEADERS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://localhost:81"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://localhost:81", "http://13.51.20.86"]
 
 # Application definition
 
