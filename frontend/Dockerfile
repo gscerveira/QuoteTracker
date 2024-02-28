@@ -11,8 +11,10 @@ RUN npm ci
 RUN npm run build
 
 # Development stage
-FROM builder as dev
+FROM node:20-alpine as dev
 WORKDIR /quotes_tracker/
+COPY . .
+RUN npm ci
 EXPOSE 3000
 # Start the development server
 CMD ["npm", "start"]
