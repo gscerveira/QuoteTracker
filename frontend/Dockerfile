@@ -16,3 +16,12 @@ WORKDIR /quotes_tracker/
 EXPOSE 3000
 # Start the development server
 CMD ["npm", "start"]
+
+# Production stage with nginx
+FROM nginx:latest as prod
+# Copy the built frontend into the container
+COPY --from=builder /quotes_tracker/build /usr/share/nginx/html
+# Expose port 80
+EXPOSE 80
+# Start the nginx server
+CMD ["nginx", "-g", "daemon off;"]
